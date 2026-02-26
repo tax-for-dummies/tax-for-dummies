@@ -1,0 +1,9 @@
+tests/node_modules/
+tests/test-results/
+tests/playwright-report/
+
+# Terraform
+**/.terraform/
+**/*.tfstate
+**/*.tfstate.*
+**/.terraform.lock.hcl

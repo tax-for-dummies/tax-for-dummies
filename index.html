@@ -1,0 +1,2877 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>UK Tax Calculator 2026/27 - Tax for Dummies</title>
+  <link rel="canonical" href="https://tax-for-dummies.com">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+  <meta name="description" content="Free UK tax calculator for 2026/27. Calculate income tax, National Insurance, student loan repayments, employer NI, and the true cost of your bills. Covers England, Scotland, Wales, and Northern Ireland.">
+  <meta property="og:title" content="UK Tax Calculator 2026/27 - Tax for Dummies">
+  <meta property="og:description" content="Discover the true cost of your bills once tax is taken into account. Covers income tax, NI, student loans, the 60% trap, and more.">
+  <meta property="og:type" content="website">
+  <meta property="og:url" content="https://tax-for-dummies.com">
+  <link rel="icon" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><text y=%22.9em%22 font-size=%2290%22>💷</text></svg>">
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@type": "WebApplication",
+    "name": "UK Tax Calculator 2026/27 - Tax for Dummies",
+    "url": "https://tax-for-dummies.com",
+    "description": "Free UK tax calculator for 2026/27. Calculate income tax, National Insurance, student loan repayments, employer NI, and the true cost of your bills.",
+    "applicationCategory": "FinanceApplication",
+    "operatingSystem": "Any",
+    "offers": {
+      "@type": "Offer",
+      "price": "0",
+      "priceCurrency": "GBP"
+    },
+    "browserRequirements": "Requires JavaScript"
+  }
+  </script>
+  <style>
+    /*
+     * TABLE OF CONTENTS
+     *
+     * 1. Reset & Variables
+     * 2. Typography & Layout
+     * 3. Mode Toggle
+     * 4. Cards
+     * 5. Form Elements
+     * 6. Region Picker
+     * 7. Bills Section
+     * 8. Results & Stats
+     * 9. Progress Bar
+     * 10. Bills Table
+     * 11. Tags & Badges
+     * 12. Make it Hurt
+     * 13. Tax the Rich
+     * 14. Slider
+     * 15. Responsive & Print
+     * 16. Disclaimer
+     */
+
+    /* ═══ 1. Reset & Variables ════════════════════════════════════════════════ */
+
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    :root {
+      --bg: #f5f5f7;
+      --card: #ffffff;
+      --border: #e5e5ea;
+      --text: #1d1d1f;
+      --muted: #6e6e73;
+      --red: #d4351c;
+      --red-light: rgba(212,53,28,0.07);
+      --green: #34c759;
+      --green-light: rgba(52,199,89,0.07);
+      --amber: #ff9f0a;
+      --amber-light: rgba(255,159,10,0.07);
+      --blue: #003078;
+      --blue-light: rgba(0,48,120,0.07);
+      --purple: #af52de;
+      --purple-light: rgba(175,82,222,0.07);
+      --accent: #003078;
+      --radius: 18px;
+    }
+
+    /* ═══ 2. Typography & Layout ════════════════════════════════════════════ */
+
+    body {
+      font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+      background: var(--bg);
+      color: var(--text);
+      min-height: 100vh;
+      padding: 40px 16px 64px;
+      -webkit-font-smoothing: antialiased;
+    }
+
+    header {
+      max-width: 800px;
+      margin: 0 auto 36px;
+      position: relative;
+    }
+    .github-link {
+      position: absolute;
+      top: 0;
+      right: 0;
+      color: var(--muted);
+      transition: color 0.15s;
+    }
+    .github-link:hover { color: var(--text); }
+    .github-link svg { display: block; width: 24px; height: 24px; }
+
+    header h1 {
+      font-size: 2.4rem;
+      font-weight: 700;
+      letter-spacing: -0.03em;
+      line-height: 1.1;
+    }
+
+    header p {
+      color: var(--muted);
+      margin-top: 8px;
+      font-size: 1rem;
+      font-weight: 400;
+      line-height: 1.5;
+    }
+
+    /* ═══ 3. Mode Toggle ═══════════════════════════════════════════════════ */
+    .mode-toggle {
+      display: inline-flex;
+      background: rgba(0,0,0,0.06);
+      border-radius: 50px;
+      padding: 4px;
+      margin-top: 24px;
+      gap: 2px;
+    }
+
+    .mode-toggle button {
+      border: none;
+      background: transparent;
+      border-radius: 46px;
+      padding: 9px 26px;
+      font-size: 0.88rem;
+      font-weight: 500;
+      font-family: inherit;
+      cursor: pointer;
+      color: var(--muted);
+      transition: all 0.2s ease;
+    }
+
+    .mode-toggle button.active {
+      background: var(--card);
+      color: var(--text);
+      box-shadow: 0 1px 4px rgba(0,0,0,0.14), 0 0 0 0.5px rgba(0,0,0,0.06);
+    }
+
+    /* Mode panels - fade transition */
+    .mode-panel {
+      display: none;
+    }
+    .mode-panel.active {
+      display: grid;
+      gap: 16px;
+    }
+
+    /* ═══ 4. Cards & Layout ══════════════════════════════════════════════════ */
+    .layout {
+      max-width: 800px;
+      margin: 0 auto;
+      display: grid;
+      gap: 16px;
+    }
+
+    .card {
+      background: var(--card);
+      border-radius: var(--radius);
+      padding: 28px 32px;
+      box-shadow: 0 1px 6px rgba(0,0,0,0.06), 0 0 0 0.5px rgba(0,0,0,0.04);
+    }
+
+    .card h2 {
+      font-size: 0.72rem;
+      font-weight: 600;
+      margin-bottom: 20px;
+      color: var(--muted);
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      text-transform: uppercase;
+      letter-spacing: 0.07em;
+    }
+
+    .card h2 .badge {
+      font-size: 0.68rem;
+      font-weight: 600;
+      padding: 2px 8px;
+      border-radius: 20px;
+      background: var(--blue-light);
+      color: var(--blue);
+      text-transform: none;
+      letter-spacing: 0;
+    }
+
+    /* ═══ 5. Form Elements ══════════════════════════════════════════════════ */
+    .field {
+      margin-bottom: 18px;
+    }
+
+    .field:last-child { margin-bottom: 0; }
+
+    label {
+      display: block;
+      font-size: 0.75rem;
+      font-weight: 600;
+      color: var(--muted);
+      margin-bottom: 7px;
+      text-transform: uppercase;
+      letter-spacing: 0.06em;
+    }
+
+    input[type="number"], select {
+      width: 100%;
+      padding: 11px 14px;
+      border: 1.5px solid var(--border);
+      border-radius: 10px;
+      font-size: 1rem;
+      font-family: inherit;
+      color: var(--text);
+      background: var(--card);
+      transition: border-color 0.15s, box-shadow 0.15s;
+      appearance: none;
+    }
+
+    input[type="number"]:focus, select:focus {
+      outline: none;
+      border-color: var(--accent);
+      box-shadow: 0 0 0 3px rgba(0,113,227,0.15);
+    }
+
+    .input-prefix {
+      position: relative;
+    }
+
+    .input-prefix span {
+      position: absolute;
+      left: 12px;
+      top: 50%;
+      transform: translateY(-50%);
+      color: var(--muted);
+      font-weight: 500;
+      pointer-events: none;
+    }
+
+    .input-prefix input {
+      padding-left: 26px;
+    }
+
+    .input-suffix {
+      position: relative;
+    }
+
+    .input-suffix span {
+      position: absolute;
+      right: 12px;
+      top: 50%;
+      transform: translateY(-50%);
+      color: var(--muted);
+      font-size: 0.85rem;
+      pointer-events: none;
+    }
+
+    .input-suffix input {
+      padding-right: 56px;
+    }
+
+    /* ═══ 6. Region Picker ══════════════════════════════════════════════════ */
+    .region-grid {
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      gap: 8px;
+    }
+
+    .region-btn {
+      border: 1.5px solid var(--border);
+      border-radius: 10px;
+      padding: 10px 8px;
+      font-size: 0.82rem;
+      font-weight: 500;
+      font-family: inherit;
+      cursor: pointer;
+      background: var(--card);
+      color: var(--muted);
+      transition: all 0.15s ease;
+      text-align: center;
+    }
+
+    .region-btn:hover {
+      border-color: var(--accent);
+      color: var(--accent);
+    }
+
+    .region-btn.active {
+      border-color: var(--accent);
+      background: rgba(0,113,227,0.08);
+      color: var(--accent);
+      font-weight: 600;
+    }
+
+    /* ═══ 7. Bills Section ══════════════════════════════════════════════════ */
+    .bills-section-label {
+      font-size: 0.72rem;
+      font-weight: 600;
+      text-transform: uppercase;
+      letter-spacing: 0.08em;
+      color: var(--muted);
+      margin: 24px 0 12px;
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+
+    .bills-section-label::after {
+      content: '';
+      flex: 1;
+      height: 1px;
+      background: var(--border);
+    }
+
+    .bill-row {
+      display: grid;
+      grid-template-columns: 1fr auto;
+      gap: 10px;
+      align-items: center;
+      margin-bottom: 10px;
+    }
+
+    .bill-row .input-prefix { flex: 1; }
+
+    .bill-row-inner {
+      display: grid;
+      grid-template-columns: 140px 1fr auto;
+      gap: 8px;
+      align-items: center;
+      margin-bottom: 10px;
+    }
+
+    .bill-row-inner input[type="text"] {
+      width: 100%;
+      padding: 11px 14px;
+      border: 1.5px solid var(--border);
+      border-radius: 10px;
+      font-size: 0.9rem;
+      font-family: inherit;
+      color: var(--text);
+      background: var(--card);
+      transition: border-color 0.15s, box-shadow 0.15s;
+    }
+
+    .bill-row-inner input[type="text"]:focus {
+      outline: none;
+      border-color: var(--accent);
+      box-shadow: 0 0 0 3px rgba(0,113,227,0.15);
+    }
+
+    .btn-remove {
+      width: 32px;
+      height: 32px;
+      border: none;
+      background: rgba(255,59,48,0.08);
+      color: var(--red);
+      border-radius: 8px;
+      cursor: pointer;
+      font-size: 0.9rem;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      flex-shrink: 0;
+      transition: background 0.15s;
+    }
+
+    .btn-remove:hover { background: rgba(255,59,48,0.15); }
+
+.btn-add {
+      border: 1.5px solid var(--border);
+      background: transparent;
+      color: var(--accent);
+      border-radius: 10px;
+      padding: 10px 16px;
+      font-size: 0.88rem;
+      font-weight: 500;
+      font-family: inherit;
+      cursor: pointer;
+      width: 100%;
+      transition: all 0.15s ease;
+      margin-top: 4px;
+    }
+
+    .btn-add:hover {
+      background: rgba(0,113,227,0.06);
+      border-color: var(--accent);
+    }
+
+    /* ═══ 8. Results & Stats ════════════════════════════════════════════════ */
+    .results-empty {
+      text-align: center;
+      padding: 40px 32px;
+      color: var(--muted);
+      font-size: 0.9rem;
+      line-height: 1.6;
+    }
+
+    .results-empty .icon { font-size: 2rem; margin-bottom: 10px; }
+
+    .stat-row {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 11px 0;
+      border-bottom: 1px solid var(--border);
+      font-size: 0.92rem;
+    }
+
+    .stat-row:last-child { border-bottom: none; }
+
+    .stat-row .label { color: var(--muted); }
+
+    .stat-row .value { font-weight: 600; }
+
+    .stat-row.highlight {
+      padding: 12px 16px;
+      margin: 6px -16px;
+      border-radius: 10px;
+      border-bottom: none;
+    }
+
+    .stat-row.red { background: rgba(255,59,48,0.06); }
+    .stat-row.red .value { color: var(--red); }
+    .stat-row.red .label { color: var(--red); opacity: 0.8; }
+
+    .stat-row.green { background: rgba(52,199,89,0.06); }
+    .stat-row.green .value { color: #248a3d; }
+    .stat-row.green .label { color: #248a3d; opacity: 0.8; }
+
+    .stat-row.amber { background: rgba(255,159,10,0.06); }
+    .stat-row.amber .value { color: #b25000; }
+    .stat-row.amber .label { color: #b25000; opacity: 0.8; }
+
+    .stat-row.blue { background: rgba(0,113,227,0.06); }
+    .stat-row.blue .value { color: var(--blue); }
+    .stat-row.blue .label { color: var(--blue); opacity: 0.8; }
+
+    .stat-row.purple { background: rgba(175,82,222,0.06); }
+    .stat-row.purple .value { color: var(--purple); }
+    .stat-row.purple .label { color: var(--purple); opacity: 0.8; }
+
+    .divider {
+      border: none;
+      border-top: 1px solid var(--border);
+      margin: 10px 0;
+    }
+
+    .insight-box {
+      background: rgba(0,113,227,0.05);
+      border: 1px solid rgba(0,113,227,0.15);
+      border-radius: 12px;
+      padding: 16px 18px;
+      margin-top: 16px;
+      font-size: 0.9rem;
+      line-height: 1.6;
+      color: var(--text);
+    }
+
+    .insight-box strong { color: var(--accent); }
+
+    .notice-box {
+      background: rgba(255,159,10,0.07);
+      border: 1px solid rgba(255,159,10,0.28);
+      border-radius: 12px;
+      padding: 14px 18px;
+      margin-top: 12px;
+      font-size: 0.85rem;
+      line-height: 1.6;
+      color: var(--text);
+    }
+
+    .notice-box strong { color: #b86e00; }
+
+    /* ═══ 9. Progress Bar ═══════════════════════════════════════════════════ */
+    .income-bar {
+      margin-top: 24px;
+    }
+
+    .income-bar h3 {
+      font-size: 0.72rem;
+      font-weight: 600;
+      text-transform: uppercase;
+      letter-spacing: 0.07em;
+      color: var(--muted);
+      margin-bottom: 10px;
+    }
+
+    .bar-track {
+      height: 12px;
+      border-radius: 100px;
+      overflow: hidden;
+      display: flex;
+      background: var(--border);
+    }
+
+    .bar-segment {
+      height: 100%;
+      transition: width 0.4s ease;
+    }
+
+    .bar-legend {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 12px;
+      margin-top: 12px;
+    }
+
+    .bar-legend-item {
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      font-size: 0.79rem;
+      color: var(--muted);
+    }
+
+    .bar-legend-item .dot {
+      width: 8px;
+      height: 8px;
+      border-radius: 50%;
+      flex-shrink: 0;
+    }
+
+    /* ═══ 10. Bills Table ═══════════════════════════════════════════════════ */
+    .bills-table {
+      width: 100%;
+      border-collapse: collapse;
+      font-size: 0.86rem;
+      margin-top: 12px;
+    }
+
+    .bills-table th {
+      text-align: left;
+      font-size: 0.72rem;
+      text-transform: uppercase;
+      letter-spacing: 0.06em;
+      color: var(--muted);
+      padding: 6px 8px;
+      border-bottom: 1px solid var(--border);
+      font-weight: 600;
+    }
+
+    .bills-table th:not(:first-child) { text-align: right; }
+
+    .bills-table td {
+      padding: 9px 8px;
+      border-bottom: 1px solid var(--border);
+      vertical-align: middle;
+    }
+
+    .bills-table td:not(:first-child) { text-align: right; font-weight: 600; }
+
+    .bills-table tr:last-child td { border-bottom: none; }
+
+    .bills-table .subtotal td {
+      background: var(--bg);
+      font-weight: 700;
+      font-size: 0.82rem;
+    }
+
+    .bills-table .tier-header td {
+      font-size: 0.72rem;
+      font-weight: 600;
+      text-transform: uppercase;
+      letter-spacing: 0.07em;
+      color: var(--muted);
+      background: var(--bg);
+      padding: 10px 8px 4px;
+    }
+
+    /* ═══ 11. Tags & Badges ═════════════════════════════════════════════════ */
+
+    .tag {
+      display: inline-block;
+      font-size: 0.68rem;
+      font-weight: 600;
+      padding: 2px 7px;
+      border-radius: 20px;
+      margin-left: 4px;
+    }
+
+    .tag.red { background: rgba(255,59,48,0.1); color: var(--red); }
+    .tag.amber { background: rgba(255,159,10,0.1); color: #b25000; }
+
+    /* Pension note (used in Advanced mode) */
+    .pension-note {
+      font-size: 0.8rem;
+      color: var(--purple);
+      margin-top: 5px;
+    }
+
+    /* ═══ 12. Make it Hurt ══════════════════════════════════════════════════ */
+    .compare-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 12px;
+      margin-bottom: 12px;
+    }
+
+    .compare-col {
+      background: var(--bg);
+      border-radius: 12px;
+      padding: 16px;
+    }
+
+    .compare-col-title {
+      font-size: 0.68rem;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: 0.08em;
+      color: var(--muted);
+      margin-bottom: 10px;
+    }
+
+    .compare-big {
+      font-size: 1.9rem;
+      font-weight: 700;
+      letter-spacing: -0.03em;
+      line-height: 1;
+      margin-bottom: 4px;
+    }
+
+    .compare-sub {
+      font-size: 0.78rem;
+      color: var(--muted);
+      margin-bottom: 4px;
+    }
+
+    /* Benefits ladder */
+    .worker-bar {
+      background: var(--bg);
+      border-radius: 12px;
+      padding: 14px 18px;
+      margin-bottom: 14px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      gap: 12px;
+      flex-wrap: wrap;
+    }
+
+    .worker-bar-amount {
+      font-size: 1.5rem;
+      font-weight: 700;
+      letter-spacing: -0.02em;
+    }
+
+    .worker-bar-sub {
+      font-size: 0.8rem;
+      color: var(--muted);
+      margin-top: 3px;
+    }
+
+    .ladder {
+      display: flex;
+      flex-direction: column;
+      gap: 6px;
+      margin-bottom: 14px;
+    }
+
+    .ladder-row {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      gap: 12px;
+      border-radius: 10px;
+      padding: 12px 16px;
+      border: 1px solid var(--border);
+      background: var(--card);
+    }
+
+    .ladder-earn {
+      font-size: 0.72rem;
+      color: var(--muted);
+      margin-top: 3px;
+    }
+
+    .ladder-row.below { opacity: 0.6; }
+
+    .ladder-row.match {
+      opacity: 1;
+      background: var(--green-light);
+      border-color: var(--green);
+    }
+
+    .ladder-row.above { opacity: 0.85; }
+
+    .ladder-main { flex: 1; min-width: 0; }
+
+    .ladder-label {
+      font-size: 0.88rem;
+      font-weight: 600;
+      color: var(--text);
+    }
+
+    .ladder-tag {
+      font-size: 0.75rem;
+      color: var(--muted);
+      margin-top: 2px;
+    }
+
+    .ladder-nums { text-align: right; flex-shrink: 0; }
+
+    .ladder-amount {
+      font-size: 0.98rem;
+      font-weight: 700;
+    }
+
+    .ladder-gap {
+      font-size: 0.75rem;
+      margin-top: 2px;
+    }
+
+    .match-banner {
+      background: var(--green-light);
+      border: 1px solid var(--green);
+      border-radius: 10px;
+      padding: 12px 16px;
+      font-size: 0.88rem;
+      margin-bottom: 12px;
+      font-weight: 500;
+    }
+
+    /* ═══ 13. Tax the Rich ══════════════════════════════════════════════════ */
+    .rate-hero {
+      text-align: center;
+      padding: 20px 0 16px;
+    }
+    .rate-hero-num {
+      font-size: 4.5rem;
+      font-weight: 700;
+      letter-spacing: -0.05em;
+      color: var(--red);
+      line-height: 1;
+    }
+    .rate-hero-label {
+      font-size: 0.9rem;
+      color: var(--muted);
+      margin-top: 6px;
+    }
+    .trap-table {
+      width: 100%;
+      border-collapse: collapse;
+      font-size: 0.86rem;
+      margin-top: 12px;
+    }
+    .trap-table th {
+      text-align: right;
+      font-size: 0.72rem;
+      text-transform: uppercase;
+      letter-spacing: 0.06em;
+      color: var(--muted);
+      padding: 6px 8px;
+      border-bottom: 1px solid var(--border);
+      font-weight: 600;
+    }
+    .trap-table th:first-child { text-align: left; }
+    .trap-table td {
+      padding: 9px 8px;
+      border-bottom: 1px solid var(--border);
+      text-align: right;
+      font-weight: 600;
+    }
+    .trap-table td:first-child { text-align: left; font-weight: 400; }
+    .trap-table tr:last-child td { border-bottom: none; }
+    .trap-table .trap-hot td { background: rgba(255,59,48,0.04); }
+    .trap-table .trap-hot .trap-rate { color: var(--red); }
+    .trap-table .trap-edge td { background: rgba(255,159,10,0.05); }
+
+    .flow-wrap { display: flex; flex-direction: column; gap: 2px; margin: 16px 0; }
+    .flow-node {
+      background: var(--bg);
+      border-radius: 12px;
+      padding: 14px 18px;
+    }
+    .flow-node.flow-uk     { border-left: 3px solid var(--accent); }
+    .flow-node.flow-mid    { border-left: 3px solid var(--green); }
+    .flow-node.flow-haven  { border-left: 3px solid var(--amber); }
+    .flow-node-title {
+      font-size: 0.7rem; font-weight: 700; text-transform: uppercase;
+      letter-spacing: 0.07em; color: var(--muted); margin-bottom: 2px;
+    }
+    .flow-node-name { font-size: 0.98rem; font-weight: 600; }
+    .flow-node-detail { font-size: 0.82rem; color: var(--muted); margin-top: 3px; }
+    .flow-connector {
+      display: flex; align-items: flex-start; gap: 10px;
+      padding: 4px 18px;
+      font-size: 0.78rem; color: var(--muted); font-style: italic;
+    }
+    .flow-connector::before {
+      content: '↓'; font-style: normal; font-size: 1rem;
+      color: var(--border); flex-shrink: 0; margin-top: -1px;
+    }
+    .vs-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; margin: 16px 0; }
+    .vs-col { background: var(--bg); border-radius: 12px; padding: 16px; }
+    .vs-label {
+      font-size: 0.7rem; font-weight: 700; text-transform: uppercase;
+      letter-spacing: 0.07em; color: var(--muted); margin-bottom: 6px;
+    }
+    .vs-amount { font-size: 1.6rem; font-weight: 700; letter-spacing: -0.02em; }
+    .vs-sub { font-size: 0.78rem; color: var(--muted); margin-top: 3px; }
+    .vs-col.vs-bad .vs-amount { color: var(--red); }
+    .vs-col.vs-good .vs-amount { color: var(--green); }
+    /* Collapsible detail sections */
+    .card details { margin-top: 0; }
+    .card details summary {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      cursor: pointer;
+      list-style: none;
+      padding: 0;
+    }
+    .card details summary::-webkit-details-marker { display: none; }
+    .summary-heading {
+      font-size: 0.72rem;
+      font-weight: 600;
+      color: var(--muted);
+      text-transform: uppercase;
+      letter-spacing: 0.05em;
+      pointer-events: none;
+    }
+    .card details summary::after {
+      content: '+';
+      font-size: 1.4rem;
+      font-weight: 300;
+      color: var(--muted);
+      line-height: 1;
+      flex-shrink: 0;
+      transition: transform 0.2s ease;
+    }
+    .card details[open] summary::after {
+      content: '-';
+    }
+    .card details .details-body {
+      margin-top: 16px;
+    }
+
+    .rich-callout {
+      background: rgba(255,59,48,0.04);
+      border: 1px solid rgba(255,59,48,0.14);
+      border-radius: 12px;
+      padding: 16px 20px;
+      margin-top: 16px;
+      font-size: 0.92rem;
+      line-height: 1.6;
+    }
+
+    /* ═══ 14. Slider ════════════════════════════════════════════════════════ */
+    .tr-slider-section { margin: 20px 0 4px; }
+    .tr-income-display {
+      font-size: 2.6rem;
+      font-weight: 700;
+      letter-spacing: -0.04em;
+      color: var(--text);
+      line-height: 1;
+      margin-bottom: 10px;
+    }
+    .tr-slider-labels {
+      display: flex;
+      justify-content: space-between;
+      font-size: 0.72rem;
+      color: var(--muted);
+      margin-top: 4px;
+    }
+    input[type="range"].tr-slider {
+      width: 100%;
+      accent-color: var(--accent);
+      cursor: pointer;
+      height: 4px;
+      margin: 6px 0;
+    }
+    .tr-trap-alert {
+      background: rgba(255,59,48,0.06);
+      border: 1px solid rgba(255,59,48,0.22);
+      border-radius: 12px;
+      padding: 14px 16px;
+      font-size: 0.88rem;
+      line-height: 1.55;
+      margin: 14px 0;
+    }
+    .tr-trap-alert strong { color: var(--red); }
+    .tr-stats {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 10px;
+      margin: 14px 0;
+    }
+    .tr-stat {
+      background: var(--bg);
+      border-radius: 12px;
+      padding: 12px 14px;
+    }
+    .tr-stat-label {
+      font-size: 0.7rem;
+      font-weight: 600;
+      text-transform: uppercase;
+      letter-spacing: 0.06em;
+      color: var(--muted);
+      margin-bottom: 4px;
+    }
+    .tr-stat-val {
+      font-size: 1.1rem;
+      font-weight: 700;
+      letter-spacing: -0.02em;
+    }
+    .tr-stat-val.red { color: var(--red); }
+    .tr-stat-val.amber { color: var(--amber); }
+    .tr-stat-val.green { color: var(--green); }
+    .tr-stat-val.purple { color: var(--purple); }
+    .tr-bar-wrap { margin: 6px 0 14px; }
+    .tr-bar {
+      display: flex;
+      height: 12px;
+      border-radius: 100px;
+      overflow: hidden;
+      background: var(--border);
+    }
+    .tr-bar-legend {
+      display: flex;
+      gap: 16px;
+      margin-top: 8px;
+      flex-wrap: wrap;
+    }
+    .tr-bar-legend-item {
+      display: flex;
+      align-items: center;
+      gap: 5px;
+      font-size: 0.75rem;
+      color: var(--muted);
+    }
+    .tr-bar-legend-item .dot { width: 8px; height: 8px; border-radius: 50%; flex-shrink: 0; }
+
+    /* ═══ 15. Responsive & Print ════════════════════════════════════════════ */
+    @media (max-width: 560px) {
+      .region-grid { grid-template-columns: repeat(2, 1fr); }
+      .bill-row-inner { grid-template-columns: 1fr 1fr auto; }
+      .bill-row-inner input[type="text"] { grid-column: span 2; }
+      body { padding: 24px 16px 48px; }
+      .card { padding: 20px; }
+      header h1 { font-size: 1.8rem; }
+      .compare-grid { grid-template-columns: 1fr; }
+      .mode-toggle { flex-wrap: wrap; border-radius: 14px; }
+      .mode-toggle button { flex: 1 0 40%; }
+    }
+
+    /* Print styles */
+    @media print {
+      body { padding: 20px; background: white; }
+      .mode-toggle { display: none; }
+      .mode-panel:not(.active) { display: none !important; }
+      .btn-add, .btn-remove { display: none; }
+      .card { box-shadow: none; border: 1px solid #ddd; break-inside: avoid; }
+      .results-empty { display: none; }
+      .disclaimer { font-size: 0.7rem; }
+      a { color: var(--text); }
+    }
+
+    /* ═══ 16. Disclaimer ══════════════════════════════════════════════════ */
+    .disclaimer {
+      max-width: 800px;
+      margin: 48px auto 0;
+      padding: 20px 0;
+      text-align: center;
+      font-size: 0.78rem;
+      color: var(--muted);
+      line-height: 1.6;
+      border-top: 1px solid var(--border);
+    }
+  </style>
+</head>
+<body>
+
+<main>
+
+<!-- ═══ Header & Mode Toggle ═══════════════════════════════════════════════ -->
+<header>
+  <a class="github-link" href="https://github.com/tax-for-dummies/tax-for-dummies" target="_blank" rel="noopener" aria-label="View source on GitHub">
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor"><path d="M12 0C5.37 0 0 5.37 0 12c0 5.31 3.435 9.795 8.205 11.385.6.105.825-.255.825-.57 0-.285-.015-1.23-.015-2.235-3.015.555-3.795-.735-4.035-1.41-.135-.345-.72-1.41-1.23-1.695-.42-.225-1.02-.78-.015-.795.945-.015 1.62.87 1.845 1.23 1.08 1.815 2.805 1.305 3.495.99.105-.78.42-1.305.765-1.605-2.67-.3-5.46-1.335-5.46-5.925 0-1.305.465-2.385 1.23-3.225-.12-.3-.54-1.53.12-3.18 0 0 1.005-.315 3.3 1.23.96-.27 1.98-.405 3-.405s2.04.135 3 .405c2.295-1.56 3.3-1.23 3.3-1.23.66 1.65.24 2.88.12 3.18.765.84 1.23 1.905 1.23 3.225 0 4.605-2.805 5.625-5.475 5.925.435.375.81 1.095.81 2.22 0 1.605-.015 2.895-.015 3.3 0 .315.225.69.825.57A12.02 12.02 0 0 0 24 12c0-6.63-5.37-12-12-12z"/></svg>
+  </a>
+  <h1>UK Tax Calculator 2026/27</h1>
+  <p>Free calculator for UK income tax, National Insurance, student loans, and employer NI. See the real cost of your bills after tax - covering England, Scotland, Wales, and Northern Ireland.</p>
+  <div class="mode-toggle">
+    <button id="btn-simple" class="active" onclick="setMode('simple')">🧮 Simple</button>
+    <button id="btn-advanced" onclick="setMode('advanced')">📊 Advanced</button>
+    <button id="btn-taxrich" onclick="setMode('taxrich')">💰 Tax the Rich</button>
+    <button id="btn-makehurt" onclick="setMode('makehurt')">🔥 Make it Hurt</button>
+  </div>
+</header>
+
+<div class="layout">
+
+  <!-- ═══ Simple Mode ════════════════════════════════════════════════════ -->
+  <div id="simple-mode" class="mode-panel active">
+    <div class="card">
+      <h2>Your Details</h2>
+
+      <div class="field">
+        <label for="s-income">💷 Yearly Gross Income</label>
+        <div class="input-prefix">
+          <span>£</span>
+          <input type="number" id="s-income" placeholder="35000" min="0" step="1000" oninput="calcSimple()">
+        </div>
+      </div>
+
+      <div class="field">
+        <label for="s-bills">🧾 Total Monthly Bills</label>
+        <div class="input-prefix">
+          <span>£</span>
+          <input type="number" id="s-bills" placeholder="1200" min="0" step="50" oninput="calcSimple()">
+        </div>
+        <div style="font-size:0.78rem;color:var(--muted);margin-top:4px;">All bills combined - rent, food, utilities, subscriptions, etc.</div>
+      </div>
+
+      <div class="field">
+        <label>📍 UK Region</label>
+        <div class="region-grid" role="radiogroup" aria-label="UK Region">
+          <button class="region-btn active" data-region="england" onclick="setRegion(this,'s')" role="radio" aria-checked="true">England</button>
+          <button class="region-btn" data-region="wales" onclick="setRegion(this,'s')" role="radio" aria-checked="false">Wales</button>
+          <button class="region-btn" data-region="scotland" onclick="setRegion(this,'s')" role="radio" aria-checked="false">Scotland</button>
+          <button class="region-btn" data-region="ni" onclick="setRegion(this,'s')" role="radio" aria-checked="false">N. Ireland</button>
+        </div>
+      </div>
+
+      <div class="field">
+        <label for="s-student-loan">🎓 Student Loan</label>
+        <select id="s-student-loan" onchange="calcSimple()">
+          <option value="none">None</option>
+          <option value="plan1">Plan 1 (pre-2012) - 9% over £24,990</option>
+          <option value="plan2">Plan 2 (post-2012) - 9% over £27,295</option>
+          <option value="plan4">Plan 4 (Scotland) - 9% over £31,395</option>
+          <option value="plan5">Plan 5 (post-2023) - 9% over £25,000</option>
+          <option value="postgrad">Postgraduate - 6% over £21,000</option>
+          <option value="plan2+pg">Plan 2 + Postgraduate</option>
+        </select>
+      </div>
+
+    </div>
+
+    <div class="card" id="simple-results">
+      <h2>Results</h2>
+      <div class="results-empty">
+        <div class="icon">🧮</div>
+        Enter your income and bills above to see your results.
+      </div>
+    </div>
+  </div>
+
+  <!-- ═══ Advanced Mode ══════════════════════════════════════════════════ -->
+  <div id="advanced-mode" class="mode-panel">
+    <div class="card">
+      <h2>Your Details</h2>
+
+      <div class="field">
+        <label for="a-income">💷 Yearly Gross Income</label>
+        <div class="input-prefix">
+          <span>£</span>
+          <input type="number" id="a-income" placeholder="35000" min="0" step="1000" oninput="calcAdvanced()">
+        </div>
+      </div>
+
+      <div class="field">
+        <label for="a-pension">🏦 Pension Contribution</label>
+        <div class="input-suffix">
+          <span>% / yr</span>
+          <input type="number" id="a-pension" placeholder="5" min="0" max="100" step="0.5" oninput="calcAdvanced()">
+        </div>
+        <div class="pension-note" id="a-pension-note"></div>
+      </div>
+
+      <div class="field">
+        <label>📍 UK Region</label>
+        <div class="region-grid" role="radiogroup" aria-label="UK Region">
+          <button class="region-btn active" data-region="england" onclick="setRegion(this,'a')" role="radio" aria-checked="true">England</button>
+          <button class="region-btn" data-region="wales" onclick="setRegion(this,'a')" role="radio" aria-checked="false">Wales</button>
+          <button class="region-btn" data-region="scotland" onclick="setRegion(this,'a')" role="radio" aria-checked="false">Scotland</button>
+          <button class="region-btn" data-region="ni" onclick="setRegion(this,'a')" role="radio" aria-checked="false">N. Ireland</button>
+        </div>
+      </div>
+
+      <div class="field">
+        <label for="a-student-loan">🎓 Student Loan</label>
+        <select id="a-student-loan" onchange="calcAdvanced()">
+          <option value="none">None</option>
+          <option value="plan1">Plan 1 (pre-2012) - 9% over £24,990</option>
+          <option value="plan2">Plan 2 (post-2012) - 9% over £27,295</option>
+          <option value="plan4">Plan 4 (Scotland) - 9% over £31,395</option>
+          <option value="plan5">Plan 5 (post-2023) - 9% over £25,000</option>
+          <option value="postgrad">Postgraduate - 6% over £21,000</option>
+          <option value="plan2+pg">Plan 2 + Postgraduate</option>
+        </select>
+      </div>
+
+      <div class="bills-section-label">Critical Bills</div>
+
+      <div id="critical-bills">
+        <div class="bill-row">
+          <label style="text-transform:none;font-size:0.9rem;font-weight:600;color:var(--text);margin:0;">🏠 Rent / Mortgage</label>
+          <div class="input-prefix" style="max-width:160px">
+            <span>£</span>
+            <input type="number" class="critical-bill" placeholder="900" min="0" step="10" oninput="calcAdvanced()">
+          </div>
+        </div>
+        <div class="bill-row">
+          <label style="text-transform:none;font-size:0.9rem;font-weight:600;color:var(--text);margin:0;">🏛 Council Tax</label>
+          <div class="input-prefix" style="max-width:160px">
+            <span>£</span>
+            <input type="number" class="critical-bill" placeholder="150" min="0" step="10" oninput="calcAdvanced()">
+          </div>
+        </div>
+        <div class="bill-row">
+          <label style="text-transform:none;font-size:0.9rem;font-weight:600;color:var(--text);margin:0;">🛒 Food &amp; Groceries</label>
+          <div class="input-prefix" style="max-width:160px">
+            <span>£</span>
+            <input type="number" class="critical-bill" placeholder="400" min="0" step="10" oninput="calcAdvanced()">
+          </div>
+        </div>
+        <div class="bill-row">
+          <label style="text-transform:none;font-size:0.9rem;font-weight:600;color:var(--text);margin:0;">⚡ Utilities (gas, electric, water)</label>
+          <div class="input-prefix" style="max-width:160px">
+            <span>£</span>
+            <input type="number" class="critical-bill" placeholder="150" min="0" step="10" oninput="calcAdvanced()">
+          </div>
+        </div>
+        <div class="bill-row">
+          <label style="text-transform:none;font-size:0.9rem;font-weight:600;color:var(--text);margin:0;">🚌 Transport</label>
+          <div class="input-prefix" style="max-width:160px">
+            <span>£</span>
+            <input type="number" class="critical-bill" placeholder="100" min="0" step="10" oninput="calcAdvanced()">
+          </div>
+        </div>
+      </div>
+
+      <div class="bills-section-label">Extras</div>
+
+      <div id="extra-bills">
+        <!-- Pre-filled extras -->
+        <div class="bill-row-inner">
+          <input type="text" placeholder="🌐 Internet" value="🌐 Internet" oninput="calcAdvanced()">
+          <div class="input-prefix">
+            <span>£</span>
+            <input type="number" class="extra-bill-amount" placeholder="40" min="0" step="5" oninput="calcAdvanced()">
+          </div>
+          <button class="btn-remove" onclick="removeBillRow(this)" title="Remove">✕</button>
+        </div>
+        <div class="bill-row-inner">
+          <input type="text" placeholder="📱 Mobile" value="📱 Mobile" oninput="calcAdvanced()">
+          <div class="input-prefix">
+            <span>£</span>
+            <input type="number" class="extra-bill-amount" placeholder="30" min="0" step="5" oninput="calcAdvanced()">
+          </div>
+          <button class="btn-remove" onclick="removeBillRow(this)" title="Remove">✕</button>
+        </div>
+        <div class="bill-row-inner">
+          <input type="text" placeholder="📺 Streaming / TV" value="📺 Streaming / TV" oninput="calcAdvanced()">
+          <div class="input-prefix">
+            <span>£</span>
+            <input type="number" class="extra-bill-amount" placeholder="20" min="0" step="5" oninput="calcAdvanced()">
+          </div>
+          <button class="btn-remove" onclick="removeBillRow(this)" title="Remove">✕</button>
+        </div>
+      </div>
+
+      <button class="btn-add" onclick="addExtraBill()">+ Add another expense</button>
+    </div>
+
+    <div class="card" id="advanced-results">
+      <h2>Results</h2>
+      <div class="results-empty">
+        <div class="icon">🧮</div>
+        Enter your income and bills above to see your results.
+      </div>
+    </div>
+  </div>
+
+  <!-- ═══ Tax the Rich Mode ══════════════════════════════════════════════ -->
+  <div id="taxrich-mode" class="mode-panel">
+
+    <!-- Card 1: The 60% Trap -->
+    <div class="card">
+      <h2>The 60% Tax Trap</h2>
+      <p style="font-size:0.9rem;line-height:1.65;color:var(--muted);margin-bottom:4px;">
+        Cross £100,000 and HMRC quietly starts withdrawing your Personal Allowance - £1 for every £2 earned.
+        By £125,140 it is gone entirely. Drag the slider to see what actually happens to your money.
+      </p>
+
+      <div class="field" style="margin:16px 0 12px;">
+        <label>Children under 16</label>
+        <div class="region-grid" style="grid-template-columns:repeat(5,1fr);margin-top:8px;" role="radiogroup" aria-label="Number of children">
+          <button class="region-btn active" id="tr-ch-0" onclick="setTrChildren(0)" role="radio" aria-checked="true">None</button>
+          <button class="region-btn" id="tr-ch-1" onclick="setTrChildren(1)" role="radio" aria-checked="false">1</button>
+          <button class="region-btn" id="tr-ch-2" onclick="setTrChildren(2)" role="radio" aria-checked="false">2</button>
+          <button class="region-btn" id="tr-ch-3" onclick="setTrChildren(3)" role="radio" aria-checked="false">3</button>
+          <button class="region-btn" id="tr-ch-4" onclick="setTrChildren(4)" role="radio" aria-checked="false">4+</button>
+        </div>
+      </div>
+
+      <div class="tr-slider-section">
+        <div class="tr-income-display" id="tr-income-display">£100,000</div>
+        <input type="range" class="tr-slider" id="tr-slider"
+               min="0" max="60" step="1" value="0"
+               oninput="calcTaxRich()">
+        <div class="tr-slider-labels">
+          <span>£100k</span>
+          <span style="color:var(--red);font-weight:600">trap zone</span>
+          <span>£500k</span>
+          <span>£750k</span>
+          <span>£1M</span>
+        </div>
+      </div>
+
+      <div id="tr-results"></div>
+    </div>
+
+    <!-- Card 2: Child Benefit Clawback -->
+    <div class="card">
+      <details>
+        <summary><span class="summary-heading">Add Kids, Pay More</span></summary>
+        <div class="details-body">
+          <p style="font-size:0.9rem;line-height:1.65;color:var(--muted);margin-bottom:16px;">
+            The High Income Child Benefit Charge (HICBC) claws back Child Benefit through your tax return
+            for anyone earning between £60,000 and £80,000. It doesn't appear on your payslip.
+            Many families don't know it exists until they get a bill.
+          </p>
+          <table class="trap-table">
+            <thead>
+              <tr>
+                <th>Income</th>
+                <th>No Children</th>
+                <th>1 Child</th>
+                <th>2 Children</th>
+                <th>3 Children</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td>£55,000</td>
+                <td>42%</td><td>42%</td><td>42%</td><td>42%</td>
+              </tr>
+              <tr class="trap-hot">
+                <td>£60,000</td>
+                <td class="trap-rate">42%</td>
+                <td class="trap-rate">48.7%</td>
+                <td class="trap-rate">53.1%</td>
+                <td class="trap-rate">57.5%</td>
+              </tr>
+              <tr class="trap-hot">
+                <td>£70,000</td>
+                <td class="trap-rate">42%</td>
+                <td class="trap-rate">48.7%</td>
+                <td class="trap-rate">53.1%</td>
+                <td class="trap-rate">57.5%</td>
+              </tr>
+              <tr class="trap-hot">
+                <td>£80,000</td>
+                <td class="trap-rate">42%</td>
+                <td class="trap-rate">48.7%</td>
+                <td class="trap-rate">53.1%</td>
+                <td class="trap-rate">57.5%</td>
+              </tr>
+              <tr>
+                <td>£85,000</td>
+                <td>42%</td><td>42%</td><td>42%</td><td>42%</td>
+              </tr>
+            </tbody>
+          </table>
+          <p style="font-size:0.78rem;color:var(--muted);margin-top:10px;">
+            Marginal rate on each extra pound earned (income tax + NI + HICBC). Child Benefit from April 2026: £27.05/wk first child, £17.90/wk each after.
+            HICBC tapers from £60,000 to £80,000 - full clawback at £80k.
+          </p>
+          <div class="insight-box" style="margin-top:12px;">
+            A family with three children earning £70,000 faces a 57.5% marginal rate -
+            higher than the rate applied to someone earning £500,000.
+            The difference is that the person earning £500,000 has an accountant.
+          </div>
+        </div>
+      </details>
+    </div>
+
+    <!-- Card 3: How the Rich Pay Nothing -->
+    <div class="card">
+      <details>
+        <summary><span class="summary-heading">How the Rich Pay Nothing</span></summary>
+        <div class="details-body">
+          <p style="font-size:0.9rem;line-height:1.65;color:var(--muted);margin-bottom:4px;">
+            While PAYE workers pay at source with no room to manoeuvre, profitable companies
+            can arrange their affairs so that UK taxable profit approaches <strong>zero</strong>.
+            This is not fraud. It is standard practice.
+          </p>
+
+          <div class="flow-wrap">
+            <div class="flow-node flow-uk">
+              <div class="flow-node-title">United Kingdom</div>
+              <div class="flow-node-name">UK Operating Company</div>
+              <div class="flow-node-detail">Earns £10,000,000 in UK revenue. Corporation tax rate: 25%.</div>
+            </div>
+            <div class="flow-connector">pays £8,000,000/yr in "intellectual property licensing fees"</div>
+            <div class="flow-node flow-mid">
+              <div class="flow-node-title">Ireland - 15% Corporation Tax (Pillar Two)</div>
+              <div class="flow-node-name">IP Holding Company</div>
+              <div class="flow-node-detail">Holds patents, trademarks, and software licences. Collects royalties from UK. Rate was 12.5% until OECD Pillar Two raised minimum to 15% for large MNCs (2024).</div>
+            </div>
+            <div class="flow-connector">routes profits as inter-company dividends (EU exemption: 0% withholding)</div>
+            <div class="flow-node flow-mid">
+              <div class="flow-node-title">Netherlands - Participation Exemption</div>
+              <div class="flow-node-name">Intermediate Holding Company</div>
+              <div class="flow-node-detail">Receives dividends tax-free under Dutch participation exemption. Passes funds onward with minimal friction.</div>
+            </div>
+            <div class="flow-connector">distributes to ultimate beneficial owner</div>
+            <div class="flow-node flow-haven">
+              <div class="flow-node-title">Cayman Islands - 0% Tax</div>
+              <div class="flow-node-name">Ultimate Parent / Foundation</div>
+              <div class="flow-node-detail">No corporation tax, no capital gains tax, no withholding tax. Profits sit here indefinitely.</div>
+            </div>
+          </div>
+
+          <div class="vs-grid">
+            <div class="vs-col vs-bad">
+              <div class="vs-label">Tax paid - honest route</div>
+              <div class="vs-amount">£2,500,000</div>
+              <div class="vs-sub">25% UK CT on £10M profit</div>
+            </div>
+            <div class="vs-col vs-good">
+              <div class="vs-label">Tax paid - offshore structure</div>
+              <div class="vs-amount">£1,700,000</div>
+              <div class="vs-sub">£500k UK CT + £1.2M Irish CT - effective rate: 17%</div>
+            </div>
+          </div>
+
+          <div class="rich-callout">
+            You paid 62p in the pound on your last pay rise.
+            This company paid 17p on £10,000,000.<br><br>
+            These are not hypothetical structures. The following companies have all faced public scrutiny,
+            parliamentary hearings, or formal EU/HMRC investigations over variants of this approach:
+          </div>
+
+          <table class="trap-table" style="margin-top:12px;">
+            <thead>
+              <tr>
+                <th>Company</th>
+                <th>UK Revenue</th>
+                <th>UK Corp Tax Paid</th>
+                <th>% of Revenue</th>
+                <th style="text-align:left">How</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td><strong>Amazon</strong></td>
+                <td style="color:var(--green)">£29bn+</td>
+                <td style="color:var(--red)">£18.7m</td>
+                <td style="color:var(--red);font-weight:700">0.06%</td>
+                <td style="text-align:left;font-weight:400;font-size:0.82rem">Luxembourg holdco collects fulfilment fees, reducing UK taxable profit to near zero. Claims £1bn+ in "direct taxes" but bundles business rates and DST into that figure (FY2024).</td>
+              </tr>
+              <tr>
+                <td><strong>Uber</strong></td>
+                <td style="color:var(--green)">£5.3bn</td>
+                <td style="color:var(--red)">£4.5m</td>
+                <td style="color:var(--red);font-weight:700">0.08%</td>
+                <td style="text-align:left;font-weight:400;font-size:0.82rem">IP held via Netherlands and Bermuda. Now claiming £1.45bn VAT refund from HMRC; lost Supreme Court appeal (Jul 2025). Restructured UK contracts to sidestep new 2026 VAT rules.</td>
+              </tr>
+              <tr>
+                <td><strong>Google</strong></td>
+                <td style="color:var(--green)">£2.89bn</td>
+                <td style="color:var(--red)">£59.1m</td>
+                <td style="color:var(--red);font-weight:700">2.0%</td>
+                <td style="text-align:left;font-weight:400;font-size:0.82rem">UK ad contracts signed with Google Ireland. Profits shifted via Dublin. 2016 HMRC settlement of £130m for 10 years criticised as "sweetheart deal". FY2024 revenue up, cut ~400 UK jobs.</td>
+              </tr>
+              <tr>
+                <td><strong>Starbucks</strong></td>
+                <td style="color:var(--green)">£526m</td>
+                <td style="color:var(--red)">£1m</td>
+                <td style="color:var(--red);font-weight:700">0.19%</td>
+                <td style="text-align:left;font-weight:400;font-size:0.82rem">Pays ~£40m/yr in royalties to Dutch parent - 40x its tax bill. UK arm reported a £35m pre-tax loss in FY2024; tax dropped from £7.2m to just £1m.</td>
+              </tr>
+              <tr>
+                <td><strong>Meta</strong></td>
+                <td style="color:var(--green)">£3.1bn</td>
+                <td style="color:var(--red)">£29.8m</td>
+                <td style="color:var(--red);font-weight:700">1.0%</td>
+                <td style="text-align:left;font-weight:400;font-size:0.82rem">UK entity provides "sales support" only. Ad revenue contracts legally sit with Facebook Ireland. FY2024 accounts filed but tax charge not yet publicly reported.</td>
+              </tr>
+              <tr>
+                <td><strong>Apple</strong></td>
+                <td style="color:var(--green)">£4.7bn</td>
+                <td style="color:var(--red)">£303.7m</td>
+                <td style="color:var(--red);font-weight:700">6.5%</td>
+                <td style="text-align:left;font-weight:400;font-size:0.82rem">IP licensing fees paid to Cupertino erode UK profit. EU ruled €13bn in illegal Irish state aid (2016). Rate has risen since OECD Pillar Two rules (2024).</td>
+              </tr>
+              <tr>
+                <td><strong>Microsoft</strong></td>
+                <td style="color:var(--green)">est. £10bn+</td>
+                <td style="color:var(--red)">est. £56m</td>
+                <td style="color:var(--red);font-weight:700">&lt;1%</td>
+                <td style="text-align:left;font-weight:400;font-size:0.82rem">Global IP held via Irish entity, tax-resident in Bermuda. UK-declared profit margins ~3-4% vs global margins of 30%+. IRS sought $29bn in US back taxes (2023).</td>
+              </tr>
+              <tr>
+                <td><strong>IKEA</strong></td>
+                <td style="color:var(--green)">est. £3bn+</td>
+                <td style="color:var(--red)">not disclosed</td>
+                <td style="color:var(--red);font-weight:700">-</td>
+                <td style="text-align:left;font-weight:400;font-size:0.82rem">Every store pays 3% franchise fee to Inter IKEA (Netherlands). EU Parliament estimated €1bn+ avoided across Europe 2009-2014. EU state aid probe ongoing.</td>
+              </tr>
+              <tr>
+                <td><strong>Nike</strong></td>
+                <td style="color:var(--green)">est. £2bn+</td>
+                <td style="color:var(--red)">not disclosed</td>
+                <td style="color:var(--red);font-weight:700">-</td>
+                <td style="text-align:left;font-weight:400;font-size:0.82rem">IP in Dutch CV structure, offshore earnings taxed at &lt;2%. EU Commission state aid investigation opened 2019, still unresolved as of 2026.</td>
+              </tr>
+              <tr>
+                <td><strong>Vodafone</strong></td>
+                <td style="color:var(--green)">est. £7bn+</td>
+                <td style="color:var(--red)">£61m</td>
+                <td style="color:var(--red);font-weight:700">~0.9%</td>
+                <td style="text-align:left;font-weight:400;font-size:0.82rem">Landmark 2010 HMRC settlement £1.25bn - pursuing £6bn unpaid for years. 2013 settlement over Irish royalty entity employing zero staff. FY2024 figure.</td>
+              </tr>
+            </tbody>
+          </table>
+          <p style="font-size:0.75rem;color:var(--muted);margin-top:8px;">
+            Sources: Companies House filings, TaxWatch UK, EU Commission decisions, HMRC annual reports. Revenue figures are most recent publicly filed UK accounts (2024-2025). Estimates marked where UK-specific data is not separately disclosed.
+          </p>
+
+          <div class="rich-callout" style="margin-top:12px;">
+            HMRC is aware. Parliament has been briefed repeatedly. The rules have not meaningfully changed.<br><br>
+            <strong>Ask your MP why the tax code treats a salary differently from a licensing fee.</strong>
+          </div>
+        </div>
+      </details>
+    </div>
+
+    <div class="notice-box" style="background:rgba(175,82,222,0.07);border-color:rgba(175,82,222,0.25);">
+      <strong style="color:#7a3aad;">Know about tax fraud?</strong>
+      If you have information about someone evading tax - including undeclared income, hidden offshore assets, or fraudulent tax credit claims - you can report it to HMRC.
+      If your tip leads to HMRC recovering more than <strong>£1.5 million</strong> in unpaid tax, you may be eligible for a financial reward.
+      Reports can be made anonymously. &nbsp;
+      <a href="https://www.tax.service.gov.uk/report-tax-fraud/before-you-start"
+         target="_blank" rel="noopener"
+         style="color:#7a3aad;font-weight:600;">Report tax fraud to HMRC</a>
+    </div>
+
+  </div>
+
+  <!-- ═══ Make it Hurt Mode ══════════════════════════════════════════════ -->
+  <div id="makehurt-mode" class="mode-panel">
+    <div class="card">
+      <h2>Your Details</h2>
+
+      <div class="field">
+        <label for="m-income">💷 Yearly Gross Income</label>
+        <div class="input-prefix">
+          <span>£</span>
+          <input type="number" id="m-income" placeholder="35000" min="0" step="1000" oninput="calcMakeItHurt()">
+        </div>
+      </div>
+
+      <div class="field">
+        <label for="m-housing">🏠 Monthly Housing Costs</label>
+        <div class="input-prefix">
+          <span>£</span>
+          <input type="number" id="m-housing" placeholder="800" min="0" step="50" oninput="calcMakeItHurt()">
+        </div>
+        <div style="font-size:0.78rem;color:var(--muted);margin-top:4px;">Rent + council tax. On UC, these are covered by the housing element &amp; council tax reduction.</div>
+      </div>
+
+      <div class="field">
+        <label for="m-other">🧾 Other Monthly Bills</label>
+        <div class="input-prefix">
+          <span>£</span>
+          <input type="number" id="m-other" placeholder="400" min="0" step="50" oninput="calcMakeItHurt()">
+        </div>
+        <div style="font-size:0.78rem;color:var(--muted);margin-top:4px;">Food, utilities, transport, subscriptions - costs both parties pay.</div>
+      </div>
+
+      <div class="field">
+        <label for="m-hours">⏱ Hours Worked / Week</label>
+        <div class="input-suffix">
+          <span>hrs</span>
+          <input type="number" id="m-hours" placeholder="37.5" min="1" max="80" step="0.5" oninput="calcMakeItHurt()">
+        </div>
+      </div>
+
+      <div class="field">
+        <label>🚗 Do you have a vehicle?</label>
+        <div class="region-grid" style="grid-template-columns:1fr 1fr" role="radiogroup" aria-label="Vehicle ownership">
+          <button class="region-btn active" id="vehicle-no"  onclick="setVehicle(false)" role="radio" aria-checked="true">No</button>
+          <button class="region-btn"        id="vehicle-yes" onclick="setVehicle(true)" role="radio" aria-checked="false">Yes</button>
+        </div>
+      </div>
+
+      <div id="vehicle-costs-field" style="display:none" class="field">
+        <label for="m-vehicle">🚗 Monthly vehicle costs</label>
+        <div class="input-prefix">
+          <span>£</span>
+          <input type="number" id="m-vehicle" placeholder="333" min="0" step="10" oninput="calcMakeItHurt()">
+        </div>
+        <div style="font-size:0.78rem;color:var(--muted);margin-top:4px;">Insurance, road tax, MOT, servicing, breakdown cover. On Motability, all of this is £0.</div>
+      </div>
+
+      <div class="field">
+        <label>📍 UK Region</label>
+        <div class="region-grid" role="radiogroup" aria-label="UK Region">
+          <button class="region-btn active" data-region="england" onclick="setRegion(this,'m')" role="radio" aria-checked="true">England</button>
+          <button class="region-btn" data-region="wales" onclick="setRegion(this,'m')" role="radio" aria-checked="false">Wales</button>
+          <button class="region-btn" data-region="scotland" onclick="setRegion(this,'m')" role="radio" aria-checked="false">Scotland</button>
+          <button class="region-btn" data-region="ni" onclick="setRegion(this,'m')" role="radio" aria-checked="false">N. Ireland</button>
+        </div>
+      </div>
+
+      <div class="field">
+        <label for="m-student-loan">🎓 Student Loan</label>
+        <select id="m-student-loan" onchange="calcMakeItHurt()">
+          <option value="none">None</option>
+          <option value="plan1">Plan 1 (pre-2012) - 9% over £24,990</option>
+          <option value="plan2">Plan 2 (post-2012) - 9% over £27,295</option>
+          <option value="plan4">Plan 4 (Scotland) - 9% over £31,395</option>
+          <option value="plan5">Plan 5 (post-2023) - 9% over £25,000</option>
+          <option value="postgrad">Postgraduate - 6% over £21,000</option>
+          <option value="plan2+pg">Plan 2 + Postgraduate</option>
+        </select>
+      </div>
+
+    </div>
+
+    <div class="card" id="makehurt-results">
+      <h2>Results</h2>
+      <div class="results-empty">
+        <div class="icon">💸</div>
+        Enter your details above to see the comparison.
+      </div>
+    </div>
+  </div>
+
+</div>
+
+<!-- ═══ Footer ═════════════════════════════════════════════════════════════ -->
+<footer class="disclaimer">
+  For information only. Rates are from publicly available HMRC data for 2026/27. Check with a professional for personal advice.
+  <br><br>
+  Not affiliated with Wiley or the "For Dummies" brand. Free and open source.
+  <br><br>
+  We believe in transparency and welcome anyone to audit the numbers, spot mistakes, or contribute. <a href="https://github.com/tax-for-dummies/tax-for-dummies" target="_blank" rel="noopener">View the source code on GitHub</a>.
+</footer>
+
+</main>
+
+<script>
+/*
+ * TABLE OF CONTENTS
+ *
+ * 1. State
+ * 2. Benefit & Tax Constants (UC, PIP, Child Benefit, Student Loans, etc.)
+ * 3. Tax Bands & Calculations (income tax, NI, employer NI)
+ * 4. Utility Functions (formatting, gross equivalent)
+ * 5. UI Interactions (region selection, mode toggle, dynamic bills)
+ * 6. Simple Mode Calculator
+ * 7. Advanced Mode Calculator
+ * 8. Reverse Tax (binary search for gross from take-home)
+ * 9. Make it Hurt Calculator
+ * 10. Tax the Rich Calculator
+ * 11. State Persistence (localStorage + URL params)
+ * 12. Event Listeners & Init
+ */
+
+// ─── 1. State ────────────────────────────────────────────────────────────────
+let simpleRegion = 'england';
+let advancedRegion = 'england';
+let makeHurtRegion  = 'england';
+let hasVehicle      = false;
+let trChildren      = 0;
+
+function setTrChildren(n) {
+  trChildren = n;
+  [0, 1, 2, 3, 4].forEach(i => {
+    const el = document.getElementById('tr-ch-' + i);
+    el.classList.toggle('active', i === n);
+    el.setAttribute('aria-checked', String(i === n));
+  });
+  calcTaxRich();
+  saveState();
+}
+
+function setVehicle(val) {
+  hasVehicle = val;
+  document.getElementById('vehicle-no').classList.toggle('active', !val);
+  document.getElementById('vehicle-yes').classList.toggle('active', val);
+  document.getElementById('vehicle-no').setAttribute('aria-checked', String(!val));
+  document.getElementById('vehicle-yes').setAttribute('aria-checked', String(val));
+  document.getElementById('vehicle-costs-field').style.display = val ? '' : 'none';
+  calcMakeItHurt();
+  saveState();
+}
+
+
+// ─── 2. Benefit & Tax Constants ──────────────────────────────────────────────
+
+// UK Universal Credit rates (from April 2026)
+const UC_MONTHLY = {
+  single_25:   424.90,
+  single_u25:  338.58,
+  couple_25:   666.97,
+  couple_u25:  528.34
+};
+
+// Carer's Allowance weekly rate (from April 2026)
+const CARERS_ALLOWANCE_WEEKLY = 86.45;
+
+// Free childcare (30 hrs/wk, 3-4 yr olds on UC)
+// 30 hrs x £6.70/hr (England national avg) x 38 term weeks / 12 months
+const CHILDCARE_30HR_MONTHLY = 637;
+
+// Scottish Child Payment (from April 2026, per child under 16)
+const SCOTTISH_CHILD_PAYMENT_WEEKLY = 28.20;
+
+// PIP (Personal Independence Payment) weekly rates from April 2026
+const PIP_DAILY_WEEKLY = { none: 0, standard: 76.70,  enhanced: 114.60 };
+const PIP_MOB_WEEKLY   = { none: 0, standard: 30.30,  enhanced: 80.00  };
+
+// UC additional monthly elements (from April 2026)
+const LCWRA_MONTHLY      = 429.08;   // Protected claimants rate (new claimants £217.26, frozen until 2030)
+const UC_CHILD_MONTHLY   = 303.94;   // per child - two-child limit removed April 2026, all children qualify
+const UC_DISABLED_CHILD  = { none: 0, lower: 162.03, higher: 506.51 };
+
+// Child Benefit weekly rates (from April 2026)
+const CB_FIRST_WEEKLY = 27.05;    // eldest / only child
+const CB_ADD_WEEKLY   = 17.90;    // each subsequent child
+
+// Foster care minimum weekly allowances (2026/27 est. +3.8% from 2025/26)
+const FOSTER_WEEKLY_MIN = [224, 236, 268, 290]; // 0-4, 5-10, 11-15, 16+
+
+// Free school meals (from Sept 2026 - all UC households, any income)
+const FREE_SCHOOL_MEALS_MONTHLY = Math.round(495 / 12); // £41/mo per school-age child
+
+// Overall benefit cap (from April 2026, unchanged)
+// Claimants receiving PIP, LCWRA, Carer's Allowance, or foster allowances are EXEMPT.
+const BENEFIT_CAP_MONTHLY = 22020 / 12; // £1,835/mo outside London (London: £25,323/yr)
+
+// Student Loan repayment thresholds (2025/26)
+const STUDENT_LOAN = {
+  plan1:    { threshold: 24990, rate: 0.09 },
+  plan2:    { threshold: 27295, rate: 0.09 },
+  plan4:    { threshold: 31395, rate: 0.09 },
+  plan5:    { threshold: 25000, rate: 0.09 },
+  postgrad: { threshold: 21000, rate: 0.06 }
+};
+
+function calcStudentLoan(grossIncome, planValue) {
+  if (!planValue || planValue === 'none') return 0;
+  const planMap = { pg: 'postgrad' };
+  let total = 0;
+  for (const p of planValue.split('+')) {
+    const key = planMap[p] || p;
+    if (STUDENT_LOAN[key]) {
+      total += Math.max(0, grossIncome - STUDENT_LOAN[key].threshold) * STUDENT_LOAN[key].rate;
+    }
+  }
+  return total;
+}
+
+// Employer NI (2025/26: 15% above £5,000 secondary threshold)
+function calcEmployerNI(grossIncome) {
+  return Math.max(0, grossIncome - 5000) * 0.15;
+}
+
+// ─── 3. Tax Bands & Calculations ─────────────────────────────────────────────
+
+const ENGLAND_BANDS = [
+  { limit: 12570, rate: 0 },
+  { limit: 50270, rate: 0.20 },
+  { limit: 125140, rate: 0.40 },
+  { limit: Infinity, rate: 0.45 }
+];
+
+const SCOTLAND_BANDS = [
+  { limit: 12570, rate: 0 },
+  { limit: 14876, rate: 0.19 },
+  { limit: 26561, rate: 0.20 },
+  { limit: 43662, rate: 0.21 },
+  { limit: 75000, rate: 0.42 },
+  { limit: 125140, rate: 0.45 },
+  { limit: Infinity, rate: 0.48 }
+];
+
+const NI_BANDS = [
+  { limit: 12570, rate: 0 },
+  { limit: 50270, rate: 0.08 },
+  { limit: Infinity, rate: 0.02 }
+];
+
+function personalAllowance(grossIncome) {
+  // Tapers £1 for every £2 above £100,000
+  if (grossIncome <= 100000) return 12570;
+  const reduction = Math.floor((grossIncome - 100000) / 2);
+  return Math.max(0, 12570 - reduction);
+}
+
+function applyBands(income, bands) {
+  if (income <= 0) return 0;
+  let tax = 0;
+  let prev = 0;
+  for (const band of bands) {
+    if (income <= prev) break;
+    const taxable = Math.min(income, band.limit) - prev;
+    tax += taxable * band.rate;
+    prev = band.limit;
+  }
+  return tax;
+}
+
+function calcIncomeTax(grossIncome, region) {
+  const pa = personalAllowance(grossIncome);
+  const taxableIncome = Math.max(0, grossIncome - pa);
+
+  // Adjust bands: remove the personal allowance portion
+  const rawBands = region === 'scotland' ? SCOTLAND_BANDS : ENGLAND_BANDS;
+  // Convert absolute limits to taxable-income space
+  const taxBands = [];
+  let prevLimit = 12570; // start of taxable income
+  for (const band of rawBands) {
+    if (band.rate === 0) continue; // personal allowance band, skip
+    const adjustedLimit = band.limit === Infinity ? Infinity : band.limit - 12570;
+    taxBands.push({ limit: adjustedLimit, rate: band.rate });
+  }
+
+  return applyBands(taxableIncome, taxBands);
+}
+
+function calcNI(grossIncome) {
+  return applyBands(grossIncome, NI_BANDS);
+}
+
+function calcTax(grossIncome, region, pensionContrib = 0) {
+  const pensionAmount = grossIncome * (pensionContrib / 100);
+  const incomeTaxableGross = Math.max(0, grossIncome - pensionAmount);
+  const incomeTax = calcIncomeTax(incomeTaxableGross, region);
+  const ni = calcNI(grossIncome); // NI is on gross (salary sacrifice would reduce it, but we simplify)
+  return { incomeTax, ni, pensionAmount };
+}
+
+// ─── 4. Utility Functions ────────────────────────────────────────────────────
+
+function grossEquivalent(amount, effectiveTaxRate) {
+  if (effectiveTaxRate >= 1) return amount;
+  return amount / (1 - effectiveTaxRate);
+}
+
+function fmt(n) {
+  return '£' + Math.round(n).toLocaleString('en-GB');
+}
+
+function fmtDec(n) {
+  return '£' + n.toLocaleString('en-GB', { minimumFractionDigits: 2, maximumFractionDigits: 2 });
+}
+
+function pct(n) {
+  return (n * 100).toFixed(1) + '%';
+}
+
+// ─── 5. UI Interactions ──────────────────────────────────────────────────────
+
+function setRegion(btn, mode) {
+  const group = btn.closest('.region-grid');
+  group.querySelectorAll('.region-btn').forEach(b => {
+    b.classList.remove('active');
+    b.setAttribute('aria-checked', 'false');
+  });
+  btn.classList.add('active');
+  btn.setAttribute('aria-checked', 'true');
+  if (mode === 's') { simpleRegion = btn.dataset.region; calcSimple(); }
+  else if (mode === 'a') { advancedRegion = btn.dataset.region; calcAdvanced(); }
+  else if (mode === 'm') { makeHurtRegion = btn.dataset.region; calcMakeItHurt(); }
+  saveState();
+}
+
+// Mode toggle
+
+function setMode(mode) {
+  // Carry income value to the new mode if it has no value yet
+  const incomeIds = { simple: 's-income', advanced: 'a-income', makehurt: 'm-income' };
+  const fromId = document.getElementById('btn-simple').classList.contains('active') ? 's-income'
+               : document.getElementById('btn-advanced').classList.contains('active') ? 'a-income'
+               : 'm-income';
+  const sourceVal = document.getElementById(fromId)?.value;
+  if (sourceVal) {
+    const dest = document.getElementById(incomeIds[mode]);
+    if (dest && !dest.value) dest.value = sourceVal;
+  }
+
+  document.getElementById('simple-mode').classList.toggle('active', mode === 'simple');
+  document.getElementById('advanced-mode').classList.toggle('active', mode === 'advanced');
+  document.getElementById('taxrich-mode').classList.toggle('active', mode === 'taxrich');
+  document.getElementById('makehurt-mode').classList.toggle('active', mode === 'makehurt');
+  document.getElementById('btn-simple').classList.toggle('active', mode === 'simple');
+  document.getElementById('btn-advanced').classList.toggle('active', mode === 'advanced');
+  document.getElementById('btn-taxrich').classList.toggle('active', mode === 'taxrich');
+  document.getElementById('btn-makehurt').classList.toggle('active', mode === 'makehurt');
+
+  // Auto-calculate so results appear immediately on tab switch
+  if (mode === 'simple') calcSimple();
+  else if (mode === 'advanced') calcAdvanced();
+  else if (mode === 'taxrich') calcTaxRich();
+  else if (mode === 'makehurt') calcMakeItHurt();
+}
+
+// Dynamic extra bills
+
+function addExtraBill() {
+  const container = document.getElementById('extra-bills');
+  const row = document.createElement('div');
+  row.className = 'bill-row-inner';
+  row.innerHTML = `
+    <input type="text" placeholder="Bill name">
+    <div class="input-prefix">
+      <span>£</span>
+      <input type="number" class="extra-bill-amount" placeholder="0" min="0" step="5">
+    </div>
+    <button class="btn-remove" title="Remove">✕</button>
+  `;
+  container.appendChild(row);
+  row.querySelector('.btn-remove').addEventListener('click', () => { row.remove(); calcAdvanced(); });
+  calcAdvanced();
+}
+
+function removeBillRow(btn) {
+  btn.closest('.bill-row-inner').remove();
+  calcAdvanced();
+}
+
+// ─── 6. Simple Mode Calculator ───────────────────────────────────────────────
+
+function calcSimple() {
+  const income = parseFloat(document.getElementById('s-income').value) || 0;
+  const monthlyBills = parseFloat(document.getElementById('s-bills').value) || 0;
+
+  if (income <= 0) {
+    document.getElementById('simple-results').innerHTML = `<h2>Results</h2><div class="results-empty"><div class="icon">🧮</div>Enter your income and bills above to see your results.</div>`;
+    saveState();
+    return;
+  }
+
+  const { incomeTax, ni } = calcTax(income, simpleRegion);
+  const studentLoanPlan = document.getElementById('s-student-loan').value;
+  const studentLoan = calcStudentLoan(income, studentLoanPlan);
+  const employerNI = calcEmployerNI(income);
+  const totalDeductions = incomeTax + ni + studentLoan;
+  const takeHome = income - totalDeductions;
+  const annualBills = monthlyBills * 12;
+  const afterBills = takeHome - annualBills;
+  const effectiveTaxRate = totalDeductions / income;
+  const billsGrossEquivalent = grossEquivalent(annualBills, effectiveTaxRate);
+  const realTaxOnBills = billsGrossEquivalent - annualBills;
+  const grossPerBillPound = annualBills > 0 ? billsGrossEquivalent / annualBills : 0;
+
+  const regionLabel = { england: 'England', wales: 'Wales', scotland: 'Scotland', ni: 'N. Ireland' }[simpleRegion];
+
+  const html = `
+    <h2>Results <span class="badge">${regionLabel}</span></h2>
+
+    <div class="stat-row">
+      <span class="label">Gross income</span>
+      <span class="value">${fmt(income)}</span>
+    </div>
+    <div class="stat-row">
+      <span class="label">Income tax</span>
+      <span class="value" style="color:var(--red)">- ${fmt(incomeTax)}</span>
+    </div>
+    <div class="stat-row">
+      <span class="label">National Insurance</span>
+      <span class="value" style="color:var(--red)">- ${fmt(ni)}</span>
+    </div>
+    ${studentLoan > 0 ? `
+    <div class="stat-row">
+      <span class="label">Student loan</span>
+      <span class="value" style="color:var(--purple)">- ${fmt(studentLoan)}</span>
+    </div>` : ''}
+    <div class="stat-row highlight red">
+      <span class="label">Total deductions</span>
+      <span class="value">- ${fmt(totalDeductions)} (${pct(effectiveTaxRate)})</span>
+    </div>
+    <div class="stat-row highlight green">
+      <span class="label">Take-home pay</span>
+      <span class="value">${fmt(takeHome)}</span>
+    </div>
+
+    <div class="stat-row">
+      <span class="label">Employer NI (on top of your salary)</span>
+      <span class="value" style="color:var(--muted)">${fmt(employerNI)}</span>
+    </div>
+    <div class="stat-row highlight blue">
+      <span class="label">Total cost to employer</span>
+      <span class="value">${fmt(income + employerNI)}</span>
+    </div>
+
+    <hr class="divider">
+
+    <div class="stat-row">
+      <span class="label">Annual bills</span>
+      <span class="value" style="color:var(--amber)">- ${fmt(annualBills)}</span>
+    </div>
+    ${annualBills > 0 ? `
+    <div class="stat-row">
+      <span class="label">Gross earned to cover bills</span>
+      <span class="value">${fmt(billsGrossEquivalent)}</span>
+    </div>
+    <div class="stat-row highlight amber">
+      <span class="label">Hidden tax cost of your bills</span>
+      <span class="value">${fmt(realTaxOnBills)}</span>
+    </div>` : ''}
+    <div class="stat-row highlight ${afterBills >= 0 ? 'green' : 'red'}">
+      <span class="label">Left after bills</span>
+      <span class="value">${fmt(afterBills)}</span>
+    </div>
+
+    ${annualBills > 0 ? `
+    <div class="insight-box">
+      For every <strong>£1.00</strong> of bills you pay, you actually had to earn <strong>${fmtDec(grossPerBillPound)}</strong> gross.<br>
+      Your effective deduction rate is <strong>${pct(effectiveTaxRate)}</strong>${studentLoan > 0 ? ' (including student loan)' : ''} - so you need to earn <strong>${fmtDec(grossPerBillPound - 1)}</strong> extra per £1 just to cover deductions.
+    </div>` : ''}
+  `;
+
+  document.getElementById('simple-results').innerHTML = html;
+  saveState();
+}
+
+// ─── 7. Advanced Mode Calculator ─────────────────────────────────────────────
+
+function calcAdvanced() {
+  const income = parseFloat(document.getElementById('a-income').value) || 0;
+  const pensionPct = parseFloat(document.getElementById('a-pension').value) || 0;
+
+  if (income <= 0) {
+    document.getElementById('advanced-results').innerHTML = `<h2>Results</h2><div class="results-empty"><div class="icon">🧮</div>Enter your income and bills above to see your results.</div>`;
+    document.getElementById('a-pension-note').textContent = '';
+    saveState();
+    return;
+  }
+
+  const { incomeTax, ni, pensionAmount } = calcTax(income, advancedRegion, pensionPct);
+  const studentLoanPlan = document.getElementById('a-student-loan').value;
+  const studentLoan = calcStudentLoan(income, studentLoanPlan);
+  const employerNI = calcEmployerNI(income);
+
+  // Pension tax relief estimate (basic rate on pension)
+  const pensionTaxRelief = calcIncomeTax(income, advancedRegion) - incomeTax;
+
+  // Update pension note
+  const pensionNote = document.getElementById('a-pension-note');
+  if (pensionPct > 0) {
+    pensionNote.textContent = `You contribute ${fmt(pensionAmount)}/yr. Estimated income tax saving: ${fmt(pensionTaxRelief)}.`;
+  } else {
+    pensionNote.textContent = '';
+  }
+
+  const totalDeductions = incomeTax + ni + studentLoan;
+  const takeHome = income - totalDeductions - pensionAmount;
+  const effectiveTaxRate = totalDeductions / income;
+
+  // Collect critical bills
+  const criticalLabels = ['Rent / Mortgage', 'Council Tax', 'Food & Groceries', 'Utilities', 'Transport'];
+  const criticalInputs = document.querySelectorAll('#critical-bills .critical-bill');
+  const criticalBills = Array.from(criticalInputs).map((inp, i) => ({
+    name: criticalLabels[i],
+    monthly: parseFloat(inp.value) || 0,
+    tier: 'critical'
+  }));
+
+  // Collect extra bills
+  const extraRows = document.querySelectorAll('#extra-bills .bill-row-inner');
+  const extraBills = Array.from(extraRows).map(row => {
+    const nameInput = row.querySelector('input[type="text"]');
+    const amountInput = row.querySelector('.extra-bill-amount');
+    return {
+      name: nameInput ? (nameInput.value || 'Unnamed') : 'Unnamed',
+      monthly: parseFloat(amountInput ? amountInput.value : 0) || 0,
+      tier: 'extra'
+    };
+  });
+
+  const allBills = [...criticalBills, ...extraBills];
+  const totalCriticalMonthly = criticalBills.reduce((s, b) => s + b.monthly, 0);
+  const totalExtraMonthly = extraBills.reduce((s, b) => s + b.monthly, 0);
+  const totalMonthlyBills = totalCriticalMonthly + totalExtraMonthly;
+  const annualBills = totalMonthlyBills * 12;
+  const afterBills = takeHome - annualBills;
+  const billsGrossEquivalent = grossEquivalent(annualBills, effectiveTaxRate);
+  const realTaxOnBills = billsGrossEquivalent - annualBills;
+  const grossPerBillPound = annualBills > 0 ? billsGrossEquivalent / annualBills : 0;
+
+  // Build bills table rows
+  let criticalTableRows = '';
+  for (const b of criticalBills) {
+    if (b.monthly === 0) continue;
+    const annual = b.monthly * 12;
+    const gross = grossEquivalent(annual, effectiveTaxRate);
+    const taxCost = gross - annual;
+    criticalTableRows += `
+      <tr>
+        <td>${b.name}</td>
+        <td>${fmt(b.monthly)}</td>
+        <td>${fmt(annual)}</td>
+        <td>${fmt(gross)}</td>
+        <td style="color:var(--red)">${fmt(taxCost)}</td>
+      </tr>`;
+  }
+
+  let extraTableRows = '';
+  for (const b of extraBills) {
+    if (b.monthly === 0) continue;
+    const annual = b.monthly * 12;
+    const gross = grossEquivalent(annual, effectiveTaxRate);
+    const taxCost = gross - annual;
+    extraTableRows += `
+      <tr>
+        <td>${b.name}</td>
+        <td>${fmt(b.monthly)}</td>
+        <td>${fmt(annual)}</td>
+        <td>${fmt(gross)}</td>
+        <td style="color:var(--red)">${fmt(taxCost)}</td>
+      </tr>`;
+  }
+
+  const criticalAnnual = totalCriticalMonthly * 12;
+  const extraAnnual = totalExtraMonthly * 12;
+  const criticalGross = grossEquivalent(criticalAnnual, effectiveTaxRate);
+  const extraGross = grossEquivalent(extraAnnual, effectiveTaxRate);
+
+  // Income bar percentages
+  const incomeTaxPct = income > 0 ? (incomeTax / income * 100) : 0;
+  const niPct = income > 0 ? (ni / income * 100) : 0;
+  const slPct = income > 0 ? (studentLoan / income * 100) : 0;
+  const pensionPctOfIncome = income > 0 ? (pensionAmount / income * 100) : 0;
+  const criticalPct = income > 0 ? (criticalAnnual / income * 100) : 0;
+  const extraPct = income > 0 ? (extraAnnual / income * 100) : 0;
+  const remainPct = Math.max(0, 100 - incomeTaxPct - niPct - slPct - pensionPctOfIncome - criticalPct - extraPct);
+
+  const regionLabel = { england: 'England', wales: 'Wales', scotland: 'Scotland', ni: 'N. Ireland' }[advancedRegion];
+
+  const html = `
+    <h2>Results <span class="badge">${regionLabel}</span></h2>
+
+    <div class="stat-row">
+      <span class="label">Gross income</span>
+      <span class="value">${fmt(income)}</span>
+    </div>
+    ${pensionAmount > 0 ? `
+    <div class="stat-row">
+      <span class="label">Pension contribution (${pensionPct}%)</span>
+      <span class="value" style="color:var(--purple)">- ${fmt(pensionAmount)}</span>
+    </div>` : ''}
+    <div class="stat-row">
+      <span class="label">Income tax</span>
+      <span class="value" style="color:var(--red)">- ${fmt(incomeTax)}</span>
+    </div>
+    <div class="stat-row">
+      <span class="label">National Insurance</span>
+      <span class="value" style="color:var(--red)">- ${fmt(ni)}</span>
+    </div>
+    ${studentLoan > 0 ? `
+    <div class="stat-row">
+      <span class="label">Student loan</span>
+      <span class="value" style="color:var(--purple)">- ${fmt(studentLoan)}</span>
+    </div>` : ''}
+    <div class="stat-row highlight red">
+      <span class="label">Total deductions</span>
+      <span class="value">- ${fmt(totalDeductions)} (${pct(effectiveTaxRate)})</span>
+    </div>
+    <div class="stat-row highlight green">
+      <span class="label">Take-home (after tax${pensionAmount > 0 ? ', pension' : ''}${studentLoan > 0 ? ' &amp; loan' : ''})</span>
+      <span class="value">${fmt(takeHome)}</span>
+    </div>
+
+    <div class="stat-row">
+      <span class="label">Employer NI (on top of your salary)</span>
+      <span class="value" style="color:var(--muted)">${fmt(employerNI)}</span>
+    </div>
+    <div class="stat-row highlight blue">
+      <span class="label">Total cost to employer</span>
+      <span class="value">${fmt(income + employerNI)}</span>
+    </div>
+
+    <hr class="divider">
+
+    ${annualBills > 0 ? `
+    <table class="bills-table">
+      <thead>
+        <tr>
+          <th>Bill</th>
+          <th>Monthly</th>
+          <th>Annual</th>
+          <th>Gross needed</th>
+          <th>Tax cost</th>
+        </tr>
+      </thead>
+      <tbody>
+        ${criticalTableRows ? `<tr class="tier-header"><td colspan="5">Critical <span class="tag red">essential</span></td></tr>${criticalTableRows}
+        <tr class="subtotal"><td>Subtotal</td><td>${fmt(totalCriticalMonthly)}</td><td>${fmt(criticalAnnual)}</td><td>${fmt(criticalGross)}</td><td style="color:var(--red)">${fmt(criticalGross - criticalAnnual)}</td></tr>` : ''}
+        ${extraTableRows ? `<tr class="tier-header"><td colspan="5">Extras <span class="tag amber">optional</span></td></tr>${extraTableRows}
+        <tr class="subtotal"><td>Subtotal</td><td>${fmt(totalExtraMonthly)}</td><td>${fmt(extraAnnual)}</td><td>${fmt(extraGross)}</td><td style="color:var(--red)">${fmt(extraGross - extraAnnual)}</td></tr>` : ''}
+      </tbody>
+    </table>
+
+    <hr class="divider">
+
+    <div class="stat-row">
+      <span class="label">Total annual bills</span>
+      <span class="value" style="color:var(--amber)">- ${fmt(annualBills)}</span>
+    </div>
+    <div class="stat-row">
+      <span class="label">Gross earned to cover all bills</span>
+      <span class="value">${fmt(billsGrossEquivalent)}</span>
+    </div>
+    <div class="stat-row highlight amber">
+      <span class="label">Hidden tax cost of your bills</span>
+      <span class="value">${fmt(realTaxOnBills)}</span>
+    </div>` : ''}
+
+    <div class="stat-row highlight ${afterBills >= 0 ? 'green' : 'red'}">
+      <span class="label">Left after bills</span>
+      <span class="value">${fmt(afterBills)}</span>
+    </div>
+
+    ${annualBills > 0 ? `
+    <div class="insight-box">
+      For every <strong>£1.00</strong> of bills, you had to earn <strong>${fmtDec(grossPerBillPound)}</strong> gross.
+      Your effective deduction rate is <strong>${pct(effectiveTaxRate)}</strong>.
+      ${pensionAmount > 0 ? `Pension contributions saved you approximately <strong>${fmt(pensionTaxRelief)}</strong> in income tax.` : ''}
+    </div>` : ''}
+
+    <div class="income-bar">
+      <h3>Where your income goes</h3>
+      <div class="bar-track">
+        <div class="bar-segment" style="width:${incomeTaxPct.toFixed(1)}%;background:#dc2626;" title="Income Tax"></div>
+        <div class="bar-segment" style="width:${niPct.toFixed(1)}%;background:#f87171;" title="NI"></div>
+        ${studentLoan > 0 ? `<div class="bar-segment" style="width:${slPct.toFixed(1)}%;background:#af52de;" title="Student Loan"></div>` : ''}
+        ${pensionAmount > 0 ? `<div class="bar-segment" style="width:${pensionPctOfIncome.toFixed(1)}%;background:#7c3aed;" title="Pension"></div>` : ''}
+        <div class="bar-segment" style="width:${criticalPct.toFixed(1)}%;background:#d97706;" title="Critical Bills"></div>
+        <div class="bar-segment" style="width:${extraPct.toFixed(1)}%;background:#fbbf24;" title="Extras"></div>
+        <div class="bar-segment" style="width:${remainPct.toFixed(1)}%;background:#16a34a;" title="Remaining"></div>
+      </div>
+      <div class="bar-legend">
+        <div class="bar-legend-item"><div class="dot" style="background:#dc2626"></div>Income tax (${incomeTaxPct.toFixed(0)}%)</div>
+        <div class="bar-legend-item"><div class="dot" style="background:#f87171"></div>NI (${niPct.toFixed(0)}%)</div>
+        ${studentLoan > 0 ? `<div class="bar-legend-item"><div class="dot" style="background:#af52de"></div>Student loan (${slPct.toFixed(0)}%)</div>` : ''}
+        ${pensionAmount > 0 ? `<div class="bar-legend-item"><div class="dot" style="background:#7c3aed"></div>Pension (${pensionPctOfIncome.toFixed(0)}%)</div>` : ''}
+        <div class="bar-legend-item"><div class="dot" style="background:#d97706"></div>Critical bills (${criticalPct.toFixed(0)}%)</div>
+        <div class="bar-legend-item"><div class="dot" style="background:#fbbf24"></div>Extras (${extraPct.toFixed(0)}%)</div>
+        <div class="bar-legend-item"><div class="dot" style="background:#16a34a"></div>Remaining (${remainPct.toFixed(0)}%)</div>
+      </div>
+    </div>
+  `;
+
+  document.getElementById('advanced-results').innerHTML = html;
+  saveState();
+}
+
+// ─── 8. Reverse Tax ─────────────────────────────────────────────────────────
+function grossForTakeHome(targetAnnual, region) {
+  if (targetAnnual <= 0) return 0;
+  let lo = 0, hi = 800000;
+  for (let i = 0; i < 60; i++) {
+    const mid = (lo + hi) / 2;
+    const { incomeTax, ni } = calcTax(mid, region);
+    if ((mid - incomeTax - ni) < targetAnnual) lo = mid; else hi = mid;
+  }
+  return Math.round((lo + hi) / 2);
+}
+
+
+// ─── 9. Make it Hurt Calculator ──────────────────────────────────────────────
+
+function calcMakeItHurt() {
+  const income       = parseFloat(document.getElementById('m-income').value)   || 0;
+  const housingCosts = parseFloat(document.getElementById('m-housing').value)  || 0;
+  const otherBills   = parseFloat(document.getElementById('m-other').value)    || 0;
+  const hoursPerWeek = parseFloat(document.getElementById('m-hours').value)    || 37.5;
+
+  if (income <= 0) {
+    document.getElementById('makehurt-results').innerHTML =
+      `<h2>Results</h2><div class="results-empty"><div class="icon">💸</div>Enter your details above to see the comparison.</div>`;
+    saveState();
+    return;
+  }
+
+  const { incomeTax, ni } = calcTax(income, makeHurtRegion);
+  const studentLoanPlan = document.getElementById('m-student-loan').value;
+  const studentLoan = calcStudentLoan(income, studentLoanPlan);
+  const totalDeductions   = incomeTax + ni + studentLoan;
+  const takeHomeMonthly   = (income - totalDeductions) / 12;
+  const effectiveTaxRate  = totalDeductions / income;
+  const hoursPerMonth     = hoursPerWeek * (52 / 12);
+  const netHourlyRate     = takeHomeMonthly / hoursPerMonth;
+
+  // Vehicle costs - worker pays these; Motability claimants pay £0
+  const vehicleCosts = hasVehicle
+    ? (parseFloat(document.getElementById('m-vehicle').value) || 333)
+    : 0;
+
+  // Worker's disposable: take-home minus housing, bills, and vehicle (if applicable)
+  const workerDisposable = takeHomeMonthly - housingCosts - otherBills - vehicleCosts;
+
+  const w = 52 / 12;  // weekly → monthly
+  const uc = UC_MONTHLY['single_25'];  // base: single, aged 25+
+
+  // UC disposable helper:
+  // - Housing always covered by UC housing element
+  // - Vehicle: claimants without Motability don't have a car (assumed); Motability claimants pay £0
+  const ucDisp = (benefitIncome) => benefitIncome - otherBills;
+
+  // ── Benefit profiles (sorted ascending by income; housing always covered) ───
+  const CB1 = CB_FIRST_WEEKLY * w;
+  const CB2 = CB1 + CB_ADD_WEEKLY * w;
+  const CB3 = CB2 + CB_ADD_WEEKLY * w;
+  const CB4 = CB3 + CB_ADD_WEEKLY * w;
+  const PIP_SD = PIP_DAILY_WEEKLY.standard * w;
+  const PIP_ED = PIP_DAILY_WEEKLY.enhanced * w;
+  const PIP_EM = PIP_MOB_WEEKLY.enhanced   * w;
+  const CA     = CARERS_ALLOWANCE_WEEKLY   * w;
+  const SCP1   = SCOTTISH_CHILD_PAYMENT_WEEKLY * w;
+  const SCP2   = SCP1 * 2;
+  const SCP3   = SCP1 * 3;
+  const SCP4   = SCP1 * 4;
+  const F1_TODDLER = FOSTER_WEEKLY_MIN[0] * w;
+  const F1_TEEN    = FOSTER_WEEKLY_MIN[2] * w;
+  const F2_TEEN    = FOSTER_WEEKLY_MIN[2] * 2 * w;
+
+  const profiles = [
+    // ─ no children ───────────────────────────────────────────────────────────
+    { label: 'UC only',
+      tag: 'Single 25+, no disability, no children',
+      kids: 0,
+      income: uc },
+
+    { label: 'UC + PIP Standard Daily Living',
+      tag: 'Moderate daily living difficulties - £76.70/wk',
+      kids: 0, capExempt: true,
+      income: uc + PIP_SD },
+
+    { label: 'UC + Carer\'s Allowance',
+      tag: 'Caring 35+ hrs/wk for a disabled person - £86.45/wk',
+      kids: 0, capExempt: true,
+      income: uc + CA },
+
+    { label: 'UC + LCWRA (unable to work)',
+      tag: 'Limited capability for work-related activity - protected claimant rate',
+      kids: 0, capExempt: true,
+      income: uc + LCWRA_MONTHLY },
+
+    { label: 'UC + PIP Enhanced Daily Living',
+      tag: 'Severe daily living difficulties - £114.60/wk',
+      kids: 0, capExempt: true,
+      income: uc + PIP_ED },
+
+    { label: 'UC + PIP Enhanced (both components)',
+      tag: 'Severe disability + significant mobility needs - £194.60/wk combined',
+      kids: 0, capExempt: true,
+      income: uc + PIP_ED + PIP_EM },
+
+    { label: 'UC + PIP Enhanced Daily + LCWRA',
+      tag: 'Severely disabled and unable to work',
+      kids: 0, capExempt: true,
+      income: uc + PIP_ED + LCWRA_MONTHLY },
+
+    { label: 'UC + PIP Enhanced (both) + LCWRA',
+      tag: 'Maximum disability combination - unable to work',
+      kids: 0, capExempt: true,
+      income: uc + PIP_ED + PIP_EM + LCWRA_MONTHLY },
+
+    // ─ foster (own children = 0; cap exempt; always shown) ───────────────────
+    { label: 'Foster carer + UC (1 toddler, 0-4)',
+      tag: 'Fostering one young child - minimum allowance rate',
+      kids: 0, foster: true, capExempt: true,
+      income: uc + F1_TODDLER },
+
+    { label: 'Foster carer + UC (1 child, age 11-15)',
+      tag: 'Fostering one teenager - minimum allowance rate',
+      kids: 0, foster: true, capExempt: true,
+      income: uc + F1_TEEN },
+
+    // ─ 1 child ───────────────────────────────────────────────────────────────
+    { label: 'UC + 1 child',
+      tag: 'One dependent child - UC child element + Child Benefit',
+      kids: 1,
+      income: uc + UC_CHILD_MONTHLY + CB1 },
+
+    { label: 'UC + 1 child + Scottish Child Payment',
+      tag: 'Scotland: additional £28.20/wk per child under 16',
+      kids: 1, scotland: true,
+      income: uc + UC_CHILD_MONTHLY + CB1 + SCP1 },
+
+    { label: 'UC + Carer\'s Allowance + 1 child',
+      tag: 'Carer with one dependent child',
+      kids: 1, capExempt: true,
+      income: uc + CA + UC_CHILD_MONTHLY + CB1 },
+
+    { label: 'UC + 1 child + free childcare (30 hrs)',
+      tag: 'Child aged 3-4: ~£637/mo childcare saved (England avg, term-time)',
+      kids: 1,
+      income: uc + UC_CHILD_MONTHLY + CB1 + CHILDCARE_30HR_MONTHLY },
+
+    { label: 'UC + 1 child + free school meals',
+      tag: 'School-age child (4-16): £495/yr meals saving - all UC households from Sept 2026',
+      kids: 1,
+      income: uc + UC_CHILD_MONTHLY + CB1 + FREE_SCHOOL_MEALS_MONTHLY },
+
+    // ─ 2 children ────────────────────────────────────────────────────────────
+    { label: 'UC + 2 children',
+      tag: 'Two dependent children - UC child elements + Child Benefit',
+      kids: 2,
+      income: uc + UC_CHILD_MONTHLY * 2 + CB2 },
+
+    { label: 'UC + 2 children + Scottish Child Payment',
+      tag: 'Scotland: +£56.40/wk additional for two children under 16',
+      kids: 2, scotland: true,
+      income: uc + UC_CHILD_MONTHLY * 2 + CB2 + SCP2 },
+
+    { label: 'UC + 2 children + PIP Enhanced Daily',
+      tag: 'Disabled parent with two children',
+      kids: 2, capExempt: true,
+      income: uc + UC_CHILD_MONTHLY * 2 + CB2 + PIP_ED },
+
+    { label: 'UC + 2 children + free childcare (30 hrs)',
+      tag: 'Two children, one aged 3-4: ~£637/mo childcare saved',
+      kids: 2,
+      income: uc + UC_CHILD_MONTHLY * 2 + CB2 + CHILDCARE_30HR_MONTHLY },
+
+    { label: 'UC + 2 children + free school meals',
+      tag: 'Both school-age: £990/yr total meals saving from Sept 2026',
+      kids: 2,
+      income: uc + UC_CHILD_MONTHLY * 2 + CB2 + FREE_SCHOOL_MEALS_MONTHLY * 2 },
+
+    { label: 'UC + 2 children + PIP Enhanced (both)',
+      tag: 'Severely disabled parent with two children',
+      kids: 2, capExempt: true,
+      income: uc + UC_CHILD_MONTHLY * 2 + CB2 + PIP_ED + PIP_EM },
+
+    { label: 'UC + 2 children + PIP Enhanced (both) + LCWRA',
+      tag: 'Unable to work, severely disabled, two children',
+      kids: 2, capExempt: true,
+      income: uc + UC_CHILD_MONTHLY * 2 + CB2 + PIP_ED + PIP_EM + LCWRA_MONTHLY },
+
+    // ─ 3+ children ───────────────────────────────────────────────────────────
+    { label: 'UC + 3 children',
+      tag: 'Three children - two-child limit removed April 2026, all three now qualify',
+      kids: 3,
+      income: uc + UC_CHILD_MONTHLY * 3 + CB3 },
+
+    { label: 'UC + 3 children + Scottish Child Payment',
+      tag: 'Scotland: three children - full UC child element + SCP for all three',
+      kids: 3, scotland: true,
+      income: uc + UC_CHILD_MONTHLY * 3 + CB3 + SCP3 },
+
+    { label: 'UC + 3 children + free school meals',
+      tag: 'All three school-age: £1,485/yr total meals saving from Sept 2026',
+      kids: 3,
+      income: uc + UC_CHILD_MONTHLY * 3 + CB3 + FREE_SCHOOL_MEALS_MONTHLY * 3 },
+
+    // ─ 4 children ────────────────────────────────────────────────────────────
+    { label: 'UC + 4 children',
+      tag: 'Four dependent children - all four qualify for UC child element from April 2026',
+      kids: 4,
+      income: uc + UC_CHILD_MONTHLY * 4 + CB4 },
+
+    { label: 'UC + 4 children + Scottish Child Payment',
+      tag: 'Scotland: four children - full UC child element + SCP for all four',
+      kids: 4, scotland: true,
+      income: uc + UC_CHILD_MONTHLY * 4 + CB4 + SCP4 },
+
+    { label: 'UC + Carer\'s Allowance + 4 children',
+      tag: 'Carer with four dependent children',
+      kids: 4, capExempt: true,
+      income: uc + CA + UC_CHILD_MONTHLY * 4 + CB4 },
+
+    { label: 'UC + 4 children + free school meals',
+      tag: 'All four school-age: £1,980/yr total meals saving from Sept 2026',
+      kids: 4,
+      income: uc + UC_CHILD_MONTHLY * 4 + CB4 + FREE_SCHOOL_MEALS_MONTHLY * 4 },
+
+    { label: 'UC + 4 children + PIP Enhanced Daily',
+      tag: 'Disabled parent with four children',
+      kids: 4, capExempt: true,
+      income: uc + UC_CHILD_MONTHLY * 4 + CB4 + PIP_ED },
+
+    { label: 'UC + 4 children + PIP Enhanced (both)',
+      tag: 'Severely disabled parent with four children',
+      kids: 4, capExempt: true,
+      income: uc + UC_CHILD_MONTHLY * 4 + CB4 + PIP_ED + PIP_EM },
+
+    { label: 'UC + 4 children + PIP Enhanced (both) + LCWRA',
+      tag: 'Unable to work, severely disabled, four children',
+      kids: 4, capExempt: true,
+      income: uc + UC_CHILD_MONTHLY * 4 + CB4 + PIP_ED + PIP_EM + LCWRA_MONTHLY },
+
+    // ─ foster with 2 children (cap exempt; always shown) ─────────────────────
+    { label: 'Foster carer + UC (2 teenagers)',
+      tag: 'Fostering two teens (age 11-15) - minimum allowance rate',
+      kids: 0, foster: true, capExempt: true,
+      income: uc + F2_TEEN },
+
+    // ─ Motability (cap exempt via PIP; only when user has a vehicle) ──────────
+    ...(hasVehicle ? [
+      { label: 'UC + PIP Enhanced Daily + Motability',
+        tag: `PIP Enhanced Mobility exchanged for a car - insurance, tax, MOT & servicing all £0/mo`,
+        kids: 0, capExempt: true,
+        income: uc + PIP_ED,
+        motability: true },
+      { label: 'UC + PIP Enhanced Daily + LCWRA + Motability',
+        tag: `Unable to work, severe disability, vehicle fully covered by Motability`,
+        kids: 0, capExempt: true,
+        income: uc + PIP_ED + LCWRA_MONTHLY,
+        motability: true },
+    ] : []),
+  ];
+
+  // Sort all profiles by income ascending, filter Scotland-only rows
+  const filteredProfiles = profiles
+    .filter(p => !p.scotland || makeHurtRegion === 'scotland')
+    .sort((a, b) => a.income - b.income);
+
+  // Mark first profile whose disposable >= worker's disposable
+  let matchFound = false;
+  const rows = filteredProfiles
+    .map(p => {
+    // Benefit cap: total benefits (cash + housing element) capped at £22,020/yr outside London.
+    // Exempt if profile includes PIP, LCWRA, Carer's Allowance, or foster allowance.
+    const totalBenefits = p.income + housingCosts;
+    const isCapped = !p.capExempt && totalBenefits > BENEFIT_CAP_MONTHLY;
+    const effectiveIncome = isCapped ? Math.max(0, BENEFIT_CAP_MONTHLY - housingCosts) : p.income;
+    const disp = effectiveIncome - otherBills;
+    const gap  = disp - workerDisposable;
+    let cls, gapText, gapColor;
+
+    if (!matchFound && disp >= workerDisposable) {
+      matchFound = true;
+      cls       = 'match';
+      gapText   = gap === 0 ? 'Exact match' : `+${fmt(gap)}/mo vs you`;
+      gapColor  = 'var(--green)';
+    } else if (disp >= workerDisposable) {
+      cls       = 'above';
+      gapText   = `+${fmt(gap)}/mo vs you`;
+      gapColor  = 'var(--green)';
+    } else {
+      cls       = 'below';
+      gapText   = `${fmt(gap)}/mo vs you`;
+      gapColor  = 'var(--muted)';
+    }
+
+    const capNote = isCapped
+      ? `<span style="color:var(--amber);font-size:0.72rem;font-weight:600;display:block;margin-top:2px;">⚠ benefit cap applies - capped at £${Math.round(BENEFIT_CAP_MONTHLY).toLocaleString()}/mo total</span>`
+      : '';
+
+    // Required gross: worker needs to cover housing + their vehicle costs + match disposable.
+    // Motability claimant pays £0 vehicle; worker pays vehicleCosts - both sides included.
+    const reqGross  = grossForTakeHome((effectiveIncome + housingCosts + vehicleCosts) * 12, makeHurtRegion);
+    const incomeGap = reqGross - income;
+    const motabilityNote = p.motability ? ` · vehicle costs £0 (Motability)` : '';
+    const earnLine  = incomeGap > 500
+      ? `earn £${Math.round(incomeGap).toLocaleString()}/yr more to match (£${reqGross.toLocaleString()}/yr gross)${motabilityNote}`
+      : incomeGap < -500
+      ? `you earn £${Math.round(Math.abs(incomeGap)).toLocaleString()}/yr more than needed${motabilityNote}`
+      : `matches your current income${motabilityNote}`;
+
+    return `
+      <div class="ladder-row ${cls}">
+        <div class="ladder-main">
+          <div class="ladder-label">${p.label}</div>
+          <div class="ladder-tag">${p.tag}${capNote}</div>
+        </div>
+        <div class="ladder-nums">
+          <div class="ladder-amount" style="color:${cls === 'match' ? 'var(--green)' : cls === 'above' ? 'var(--text)' : 'var(--muted)'}">${fmt(disp)}/mo</div>
+          <div class="ladder-gap" style="color:${gapColor}">${gapText}</div>
+          <div class="ladder-earn">${earnLine}</div>
+        </div>
+      </div>`;
+  }).join('');
+
+  const matchProfile = filteredProfiles.find(p => {
+    const tb = p.income + housingCosts;
+    const isCap = !p.capExempt && tb > BENEFIT_CAP_MONTHLY;
+    const eff = isCap ? Math.max(0, BENEFIT_CAP_MONTHLY - housingCosts) : p.income;
+    return eff - otherBills >= workerDisposable;
+  });
+  const regionLabel  = { england: 'England', wales: 'Wales', scotland: 'Scotland', ni: 'N. Ireland' }[makeHurtRegion];
+
+  const matchDisp = matchProfile ? (() => {
+    const tb = matchProfile.income + housingCosts;
+    const isCap = !matchProfile.capExempt && tb > BENEFIT_CAP_MONTHLY;
+    const eff = isCap ? Math.max(0, BENEFIT_CAP_MONTHLY - housingCosts) : matchProfile.income;
+    return eff - otherBills;
+  })() : 0;
+
+  const bannerHtml = matchProfile
+    ? `<div class="match-banner">
+        Someone on <strong>${matchProfile.label}</strong> takes home <strong>${fmt(matchDisp)}/month</strong> disposable -
+        matching your <strong>${fmt(workerDisposable)}/month</strong>.
+        You work <strong>${hoursPerWeek}h/week</strong> and pay <strong>${pct(effectiveTaxRate)}</strong> tax to earn the same.
+       </div>`
+    : `<div class="match-banner" style="background:var(--blue-light);border-color:var(--blue);">
+        Even with maximum combined benefits, a claimant's disposable income doesn't reach your <strong>${fmt(workerDisposable)}/month</strong>.
+       </div>`;
+
+  const html = `
+    <h2>Who earns the same as you? <span class="badge">${regionLabel}</span></h2>
+
+    <div class="worker-bar">
+      <div>
+        <div style="font-size:0.72rem;font-weight:700;text-transform:uppercase;letter-spacing:0.07em;color:var(--muted);margin-bottom:4px;">Your disposable income</div>
+        <div class="worker-bar-amount">${fmt(workerDisposable)}/mo</div>
+      </div>
+      <div style="text-align:right">
+        <div class="worker-bar-sub">${fmt(income)}/yr gross · ${pct(effectiveTaxRate)} deductions · £${netHourlyRate.toFixed(2)}/hr</div>
+        <div class="worker-bar-sub">${fmt(takeHomeMonthly)}/mo take-home − ${fmt(housingCosts)} housing − ${fmt(otherBills)} bills${vehicleCosts > 0 ? ` − ${fmt(vehicleCosts)} vehicle` : ''}</div>
+      </div>
+    </div>
+
+    ${bannerHtml}
+
+    <div style="font-size:0.75rem;font-weight:700;text-transform:uppercase;letter-spacing:0.07em;color:var(--muted);margin:14px 0 8px;">
+      Benefits ladder (April 2026 rates) - UC housing &amp; council tax always covered
+    </div>
+
+    <div class="ladder">${rows}</div>
+
+    <div class="insight-box">
+      You work <strong>${hoursPerWeek} hours a week</strong> and keep <strong>${fmt(workerDisposable)}/mo</strong> after tax, housing, and bills.
+      HMRC takes <strong>${fmt(totalDeductions / 12)}/mo</strong> off the top before you see a penny - an effective rate of <strong>${pct(effectiveTaxRate)}</strong>.
+      Meanwhile, a claimant pays no rent, no council tax, and keeps their entire standard allowance as spending money.
+      "If working more was the answer, you'd already be ahead."
+    </div>
+
+    <div class="notice-box">
+      <strong>On benefit fraud:</strong> The DWP estimates fraud cost the UK <strong>£6.5 billion</strong> in 2024/25 -
+      <strong>2.2%</strong> of the total £292bn benefit bill. Every pound of that is funded by workers like you.
+      Benefits are uprated <strong>every April</strong> using the previous September's CPI inflation figure.
+      The State Pension gets the better deal: it rises by whichever is highest of CPI, average earnings growth, or 2.5% (the "triple lock").
+      Working-age benefits like Universal Credit get CPI only - in April 2026 that was +3.8%.
+      <br><br>
+      If you suspect someone is claiming benefits they are not entitled to, you can
+      <a href="https://www.report-benefit-fraud.service.gov.uk/public-referral/suspect-details"
+         target="_blank" rel="noopener"
+         style="color:#b86e00;font-weight:600;">report benefit fraud anonymously</a>
+      to the DWP Fraud and Error Service. Reports can be made without giving your own details.
+    </div>
+  `;
+
+  document.getElementById('makehurt-results').innerHTML = html;
+  saveState();
+}
+
+// Event delegation for dynamically added extra bill rows
+document.getElementById('extra-bills').addEventListener('input', calcAdvanced);
+
+// ─── 10. Tax the Rich Calculator ─────────────────────────────────────────────
+
+function sliderToIncome(pos) {
+  // positions 0-25: £100k to £125k in £1k steps (the trap zone)
+  // positions 25-60: £125k to £1M in £25k steps
+  if (pos <= 25) return 100000 + pos * 1000;
+  return 125000 + (pos - 25) * 25000;
+}
+
+function calcTaxRich() {
+  const pos = parseInt(document.getElementById('tr-slider').value);
+  const income = sliderToIncome(pos);
+  document.getElementById('tr-income-display').textContent = '£' + income.toLocaleString('en-GB');
+
+  const pa = personalAllowance(income);
+  const { incomeTax, ni } = calcTax(income, 'england');
+  const totalDeductions = incomeTax + ni;
+  const takeHome = income - totalDeductions;
+  const effectiveRate = totalDeductions / income;
+
+  const inTrap = income > 100000 && income <= 125140;
+  const aboveTrap = income > 125140;
+
+  let marginalCombined;
+  if (income <= 100000)      marginalCombined = 0.42;
+  else if (income <= 125140) marginalCombined = 0.62;
+  else                       marginalCombined = 0.47;
+
+  // Child Benefit - fully clawed back above £80k, so every slider income = £0 received
+  const annualCB = trChildren === 0 ? 0
+    : CB_FIRST_WEEKLY * 52 + Math.max(0, trChildren - 1) * CB_ADD_WEEKLY * 52;
+  const cbChildren = Math.min(trChildren, 4); // cap label at 4+
+
+  const itPct = incomeTax / income * 100;
+  const niPct = ni / income * 100;
+  const thPct = takeHome / income * 100;
+
+  // Trap zone alert
+  const cbTrapLine = annualCB > 0
+    ? ` You also receive <strong>£0 in Child Benefit</strong> - a family on £50,000 with the same ${cbChildren === 1 ? '1 child' : cbChildren + ' children'} gets ${fmt(annualCB)}/yr for free.`
+    : '';
+  const trapHtml = inTrap ? `
+    <div class="tr-trap-alert">
+      <strong>You are in the 60% trap.</strong>
+      Your Personal Allowance has been cut from £12,570 to ${fmt(pa)} because you crossed £100,000.
+      For every extra £1 earned here, HMRC takes <strong>60p in income tax alone</strong> - 62p once NI is included.
+      You keep <strong>38p</strong>.${cbTrapLine}
+    </div>` : '';
+
+  // CB stat tile (only shown when children > 0)
+  const cbStatHtml = annualCB > 0 ? `
+      <div class="tr-stat">
+        <div class="tr-stat-label">Child Benefit forfeited</div>
+        <div class="tr-stat-val red">${fmt(annualCB)}/yr</div>
+      </div>` : '';
+
+  // Comparison note
+  const compHtml = aboveTrap ? `
+    <div class="insight-box" style="margin-bottom:14px;">
+      ${income >= 500000
+        ? `At ${fmt(income)}, your effective rate is <strong>${pct(effectiveRate)}</strong> - less than the 62% marginal rate paid on every pound earned between £100,000 and £125,140.`
+        : `You're clear of the trap. The 45% additional rate applies above £125,140. Effective rate: <strong>${pct(effectiveRate)}</strong>.`
+      }
+      ${annualCB > 0 ? ` Plus ${fmt(annualCB)}/yr in Child Benefit you'll never see.` : ''}
+    </div>` : '';
+
+  // Bottom insight
+  const bottomHtml = inTrap
+    ? `<div class="insight-box">
+        Drag past £125,140 and your marginal rate drops to 47%. The trap punishes incomes that sit
+        inside it, not ones that sail through it. The one legal escape: pension contributions
+        reduce your adjusted net income and can restore the lost Personal Allowance pound for pound.
+       </div>`
+    : income >= 800000
+    ? `<div class="insight-box">
+        At ${fmt(income)}, effective rate <strong>${pct(effectiveRate)}</strong>.
+        The offshore structures below can reduce a company paying this income to an effective rate under 15%.
+        "If working more was the answer, you'd already be ahead."
+       </div>`
+    : `<div class="insight-box">
+        Effective rate: <strong>${pct(effectiveRate)}</strong>.
+        Drag back into £100k-£125k to see the trap.
+       </div>`;
+
+  document.getElementById('tr-results').innerHTML = `
+    ${trapHtml}
+    ${compHtml}
+    <div class="tr-stats">
+      <div class="tr-stat">
+        <div class="tr-stat-label">Income Tax</div>
+        <div class="tr-stat-val red">${fmt(incomeTax)}</div>
+      </div>
+      <div class="tr-stat">
+        <div class="tr-stat-label">National Insurance</div>
+        <div class="tr-stat-val amber">${fmt(ni)}</div>
+      </div>
+      <div class="tr-stat">
+        <div class="tr-stat-label">Take-Home / yr</div>
+        <div class="tr-stat-val green">${fmt(takeHome)}</div>
+      </div>
+      <div class="tr-stat">
+        <div class="tr-stat-label">Take-Home / mo</div>
+        <div class="tr-stat-val green">${fmt(takeHome / 12)}</div>
+      </div>
+      <div class="tr-stat">
+        <div class="tr-stat-label">Effective Rate</div>
+        <div class="tr-stat-val">${pct(effectiveRate)}</div>
+      </div>
+      <div class="tr-stat">
+        <div class="tr-stat-label">Marginal Rate</div>
+        <div class="tr-stat-val${inTrap ? ' red' : ''}">${Math.round(marginalCombined * 100)}%</div>
+      </div>
+      ${cbStatHtml}
+    </div>
+    <div class="tr-bar-wrap">
+      <div class="tr-bar">
+        <div style="flex:${itPct};background:var(--red)"></div>
+        <div style="flex:${niPct};background:var(--amber)"></div>
+        <div style="flex:${thPct};background:var(--green)"></div>
+      </div>
+      <div class="tr-bar-legend">
+        <span class="tr-bar-legend-item"><span class="dot" style="background:var(--red)"></span>Income Tax ${pct(itPct/100)}</span>
+        <span class="tr-bar-legend-item"><span class="dot" style="background:var(--amber)"></span>NI ${pct(niPct/100)}</span>
+        <span class="tr-bar-legend-item"><span class="dot" style="background:var(--green)"></span>Take-Home ${pct(thPct/100)}</span>
+      </div>
+    </div>
+    ${bottomHtml}
+  `;
+  saveState();
+}
+
+// ─── 11. State Persistence ───────────────────────────────────────────────────
+
+function saveState() {
+  try {
+    const state = {
+      mode: document.getElementById('btn-simple').classList.contains('active') ? 'simple'
+          : document.getElementById('btn-advanced').classList.contains('active') ? 'advanced'
+          : document.getElementById('btn-taxrich').classList.contains('active') ? 'taxrich'
+          : 'makehurt',
+      sIncome: document.getElementById('s-income').value,
+      sBills: document.getElementById('s-bills').value,
+      sRegion: simpleRegion,
+      sLoan: document.getElementById('s-student-loan').value,
+      aIncome: document.getElementById('a-income').value,
+      aPension: document.getElementById('a-pension').value,
+      aRegion: advancedRegion,
+      aLoan: document.getElementById('a-student-loan').value,
+      mIncome: document.getElementById('m-income').value,
+      mHousing: document.getElementById('m-housing').value,
+      mOther: document.getElementById('m-other').value,
+      mHours: document.getElementById('m-hours').value,
+      mRegion: makeHurtRegion,
+      mLoan: document.getElementById('m-student-loan').value,
+      hasVehicle: hasVehicle,
+      mVehicle: document.getElementById('m-vehicle').value,
+      trChildren: trChildren,
+      trSlider: document.getElementById('tr-slider').value,
+      criticalBills: Array.from(document.querySelectorAll('.critical-bill')).map(i => i.value),
+      extraBills: Array.from(document.querySelectorAll('#extra-bills .bill-row-inner')).map(row => ({
+        name: row.querySelector('input[type="text"]')?.value || '',
+        amount: row.querySelector('.extra-bill-amount')?.value || ''
+      }))
+    };
+    localStorage.setItem('ukTaxState', JSON.stringify(state));
+    updateURL(state);
+  } catch(e) {}
+}
+
+function loadState() {
+  // URL params take priority over localStorage
+  const params = new URLSearchParams(window.location.search);
+  const hasURLParams = params.has('income') || params.has('mode');
+
+  let state = null;
+  if (hasURLParams) {
+    state = stateFromURL(params);
+  } else {
+    try {
+      const raw = localStorage.getItem('ukTaxState');
+      if (raw) state = JSON.parse(raw);
+    } catch(e) {}
+  }
+  if (!state) return;
+
+  // Restore values
+  if (state.sIncome) document.getElementById('s-income').value = state.sIncome;
+  if (state.sBills) document.getElementById('s-bills').value = state.sBills;
+  if (state.sLoan) document.getElementById('s-student-loan').value = state.sLoan;
+  if (state.aIncome) document.getElementById('a-income').value = state.aIncome;
+  if (state.aPension) document.getElementById('a-pension').value = state.aPension;
+  if (state.aLoan) document.getElementById('a-student-loan').value = state.aLoan;
+  if (state.mIncome) document.getElementById('m-income').value = state.mIncome;
+  if (state.mHousing) document.getElementById('m-housing').value = state.mHousing;
+  if (state.mOther) document.getElementById('m-other').value = state.mOther;
+  if (state.mHours) document.getElementById('m-hours').value = state.mHours;
+  if (state.mLoan) document.getElementById('m-student-loan').value = state.mLoan;
+  if (state.mVehicle) document.getElementById('m-vehicle').value = state.mVehicle;
+
+  // Restore regions
+  if (state.sRegion) {
+    simpleRegion = state.sRegion;
+    const btn = document.querySelector(`#simple-mode .region-btn[data-region="${state.sRegion}"]`);
+    if (btn) { document.querySelectorAll('#simple-mode .region-btn').forEach(b => { b.classList.remove('active'); b.setAttribute('aria-checked','false'); }); btn.classList.add('active'); btn.setAttribute('aria-checked','true'); }
+  }
+  if (state.aRegion) {
+    advancedRegion = state.aRegion;
+    const btn = document.querySelector(`#advanced-mode .region-btn[data-region="${state.aRegion}"]`);
+    if (btn) { document.querySelectorAll('#advanced-mode .region-btn').forEach(b => { b.classList.remove('active'); b.setAttribute('aria-checked','false'); }); btn.classList.add('active'); btn.setAttribute('aria-checked','true'); }
+  }
+  if (state.mRegion) {
+    makeHurtRegion = state.mRegion;
+    const btn = document.querySelector(`#makehurt-mode .region-btn[data-region="${state.mRegion}"]`);
+    if (btn) { document.querySelectorAll('#makehurt-mode .region-btn[data-region]').forEach(b => { b.classList.remove('active'); b.setAttribute('aria-checked','false'); }); btn.classList.add('active'); btn.setAttribute('aria-checked','true'); }
+  }
+
+  // Restore vehicle toggle
+  if (state.hasVehicle !== undefined) setVehicle(state.hasVehicle);
+
+  // Restore Tax the Rich children + slider
+  if (state.trChildren !== undefined) setTrChildren(state.trChildren);
+  if (state.trSlider) document.getElementById('tr-slider').value = state.trSlider;
+
+  // Restore critical bills
+  if (state.criticalBills) {
+    const inputs = document.querySelectorAll('.critical-bill');
+    state.criticalBills.forEach((v, i) => { if (inputs[i] && v) inputs[i].value = v; });
+  }
+
+  // Restore extra bills
+  if (state.extraBills && state.extraBills.length > 0) {
+    const container = document.getElementById('extra-bills');
+    // Remove existing rows and rebuild
+    container.innerHTML = '';
+    for (const bill of state.extraBills) {
+      const row = document.createElement('div');
+      row.className = 'bill-row-inner';
+      row.innerHTML = `
+        <input type="text" placeholder="Bill name" value="${bill.name.replace(/"/g, '&quot;')}">
+        <div class="input-prefix">
+          <span>£</span>
+          <input type="number" class="extra-bill-amount" placeholder="0" min="0" step="5" value="${bill.amount}">
+        </div>
+        <button class="btn-remove" title="Remove">✕</button>
+      `;
+      container.appendChild(row);
+      row.querySelector('.btn-remove').addEventListener('click', () => { row.remove(); calcAdvanced(); });
+    }
+  }
+
+  // Switch mode and trigger calculations
+  if (state.mode) setMode(state.mode);
+}
+
+// URL param handling
+
+function updateURL(state) {
+  const params = new URLSearchParams();
+  if (state.mode && state.mode !== 'simple') params.set('mode', state.mode);
+
+  // Only include params relevant to active mode
+  if (state.mode === 'simple' || !state.mode) {
+    if (state.sIncome) params.set('income', state.sIncome);
+    if (state.sBills) params.set('bills', state.sBills);
+    if (state.sRegion && state.sRegion !== 'england') params.set('region', state.sRegion);
+    if (state.sLoan && state.sLoan !== 'none') params.set('loan', state.sLoan);
+  } else if (state.mode === 'advanced') {
+    if (state.aIncome) params.set('income', state.aIncome);
+    if (state.aRegion && state.aRegion !== 'england') params.set('region', state.aRegion);
+    if (state.aPension) params.set('pension', state.aPension);
+    if (state.aLoan && state.aLoan !== 'none') params.set('loan', state.aLoan);
+  } else if (state.mode === 'makehurt') {
+    if (state.mIncome) params.set('income', state.mIncome);
+    if (state.mHousing) params.set('housing', state.mHousing);
+    if (state.mOther) params.set('bills', state.mOther);
+    if (state.mHours) params.set('hours', state.mHours);
+    if (state.mRegion && state.mRegion !== 'england') params.set('region', state.mRegion);
+    if (state.mLoan && state.mLoan !== 'none') params.set('loan', state.mLoan);
+  }
+
+  const qs = params.toString();
+  const newURL = qs ? `${window.location.pathname}?${qs}` : window.location.pathname;
+  history.replaceState(null, '', newURL);
+}
+
+function stateFromURL(params) {
+  const mode = params.get('mode') || 'simple';
+  const income = params.get('income') || '';
+  const bills = params.get('bills') || '';
+  const region = params.get('region') || 'england';
+  const loan = params.get('loan') || 'none';
+  const pension = params.get('pension') || '';
+  const housing = params.get('housing') || '';
+  const hours = params.get('hours') || '';
+
+  const state = { mode };
+  if (mode === 'simple' || !mode) {
+    state.sIncome = income; state.sBills = bills; state.sRegion = region; state.sLoan = loan;
+  } else if (mode === 'advanced') {
+    state.aIncome = income; state.aRegion = region; state.aPension = pension; state.aLoan = loan;
+  } else if (mode === 'makehurt') {
+    state.mIncome = income; state.mHousing = housing; state.mOther = bills; state.mHours = hours;
+    state.mRegion = region; state.mLoan = loan;
+  }
+  return state;
+}
+
+// ─── 12. Event Listeners & Init ──────────────────────────────────────────────
+document.addEventListener('input', e => {
+  if (e.target.matches('input, select')) saveState();
+});
+document.addEventListener('change', e => {
+  if (e.target.matches('input, select')) saveState();
+});
+
+// Initialize
+loadState();
+</script>
+</body>
+</html>
